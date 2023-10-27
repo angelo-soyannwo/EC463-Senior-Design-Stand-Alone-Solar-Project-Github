@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--Metadata (data about data) goes inbetween HTML head tags-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sol</title>
+
+    <link rel = "stylesheet" type = "text/css" href = "css/sign-up.css">
+
+    <!--box icons link-->
+    <link rel="stylesheet"
+    href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- remix icons link-->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+
+    <!-- google forms icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Orbit&display=swap" rel="stylesheet">
+
+    <!-- favicons -->
+    <link rel="icon" 
+     type="image/png" 
+     size = "32x32"
+     href="Assets/mylogo2.png">
+
+     <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap-5.0.2-dist/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="bootstrap-5.0.2-dist/css/bootstrap.min.css">
+    <link rel = "stylesheet" type = "text/css" href = "css/contact.css">
+
+
+</head>
+
+<body>
+    <header>
+        <!-- link -->
+        <a href="index.html" class="logo">Sol</a>
+
+        <!-- unordered list -->
+        <ul class="navlist">
+            <!-- list elements (# denotes where the page should scroll to when the link is selected)-->
+            <li><a href="login.html">Login</a></li>
+            <li><a href="sign-up.html">Sign Up</a></li>
+        </ul>
+        <!-- section of a html document. Often used as a container for javascript code -->
+        <div class="bx bx-menu" id="menu-icon"></div>
+
+        <!-- custom js link -->
+        <script src=js/script.js> </script>
+    </header>
+
+            <div class="row">
+                <div class="col"></div>
+
+                <div class="col-8">
+                    <section class="data-analytics">
+        
+                
+                        <div class="card email-card" >
+                            <!-- <div class="card email-card" style="width: 60rem;"> -->
+                                <div class="card-body">
+                                    <h5 class="card-title">Sign Up</h5>
+    
+                                    <div class="mb-3">
+                                        <label for="first-name" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="full-name" name="Name" placeholder="First name">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="last-name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="-name" name="Name" placeholder="Last name">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Email Address</label>
+                                        <input type="email" class="form-control" id="email-address" name="From" placeholder="email@example.com">
+                                    </div>
+    
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="text" class="form-control" id="password" name="Password" placeholder="password">
+                                    </div>    
+    
+    
+                                    <input type="hidden" name="subject" id="email-subject" value="{{ Subject }}">
+    
+    
+                                    <!-- <button type="button" class="btn signin-btn btn-lg" onclick="sendEmail(); reset(); return false;">Send</button>  -->
+                                <span class="text-center">
+                                    <p>Already have an account <a href="login.html">Login</a> </p>
+                                </span>
+                                <br>
+                                <button type="submit" class="btn signin-btn btn-lg" >Sign-up</button>
+                                
+                            </div>
+        
+                        <!-- </form> -->
+                    </section>
+                </div>
+
+                <div class="col"></div>
+            </div>
+
+        
+
+
+        
+
+    </div>
+
+    
+
+    
+    </div>
+
+    
+    <!-- custom js link -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    
+
+
+
+    
+</body>
+</html>
