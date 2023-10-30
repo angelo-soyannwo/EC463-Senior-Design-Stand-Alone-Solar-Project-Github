@@ -101,15 +101,3 @@ header{
   margin: auto;
   justify-content: space-between;
 }
-
-button.btn-lg{
-  color: white;
-  background-color: #b84444;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-button.btn-lg:hover{
-  color: white;
-  background-color: #9c3737;
-}
