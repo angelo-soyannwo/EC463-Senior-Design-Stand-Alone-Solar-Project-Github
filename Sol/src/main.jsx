@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+
 import { createBrowserRouter, RouterProvider,} from 'react-router-dom'
 import './index.css'
 /* existing imports */
-import Root from "./routes/root";
+// import Root from "./routes/root";
+
+import App from './App.jsx'
 import ErrorPage from "./pages/ErrorPage";
 import HomePage from "./pages/HomePage";
 import AnomaliesPage from "./pages/AnomaliesPage";
@@ -14,7 +16,8 @@ import AnalyticsPage from './pages/AnalyticsPage'
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    // element: <Root />,
+    element: <App />,
     errorElement: <ErrorPage />,
   },
   {
