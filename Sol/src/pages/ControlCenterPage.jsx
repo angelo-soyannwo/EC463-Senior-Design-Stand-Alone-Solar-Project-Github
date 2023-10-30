@@ -2,21 +2,23 @@ import React from 'react';
 import  Sol_logo  from '../assets/sol.png'
 import './css/home-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import { Link,} from "react-router-dom";
 
 export default function ControlCenterPage() {
     return (
         <>
         <header>
           <nav class="navbar">
-                <div className="logo">
-                  Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
-                </div>
+              <div>
+                <Link className="logo" href="../home">
+                Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
+                </Link>
+              </div>
   
             <ul class="topnav">
-            <li><a className="nav-link" href="#">Analytics</a></li>
-              <li><a className="nav-link" href="#">Control Center</a></li>
-              <li><a className="nav-link" href="#">Anomalies</a></li>
+              <li><Link className="nav-link" to="../analytics">Analytics</Link></li>
+              <li><Link className="nav-link" to="../control-center">Control Center</Link></li>
+              <li><Link className="nav-link" to="../anomalies">Anomalies</Link></li>
             </ul>
           </nav>
         </header>

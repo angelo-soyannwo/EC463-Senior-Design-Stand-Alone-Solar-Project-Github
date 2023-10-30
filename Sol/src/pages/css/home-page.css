@@ -93,6 +93,9 @@ header{
 
 .navbar .logo{
   font-size: 30px;
+  text-decoration:none;
+  color: black;
+
 }
 
 .page_content{
@@ -105,4 +108,8 @@ header{
   margin: 0 auto;
   width: 1140px;
   justify-content: space-between;
+}
+
+.maxim {
+  padding-top: 100px;
 }

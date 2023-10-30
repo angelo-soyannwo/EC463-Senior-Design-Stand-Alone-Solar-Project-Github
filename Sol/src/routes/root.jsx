@@ -3,14 +3,18 @@ import  viteLogo  from '/vite.svg'
 // import './App.css';
 import '../pages/css/home-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from "react-router-dom";
 
 export default function Root() {
+
     return (
       <>
         <header>
           <nav class="navbar">
-                <div className="logo">
+                <div>
+                  <Link className="logo" to="/">
                   Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
+                  </Link>
                 </div>
   
             <ul class="topnav">
@@ -28,7 +32,7 @@ export default function Root() {
   
                   <div class="col-4">
                       <div class="row">
-                      <p><br></br><br></br><br></br><br></br>Harness The Power of The Sun.<br></br>
+                      <p className="maxim">Harness The Power of The Sun.<br></br>
                       </p>
                       </div>
                   </div>
