@@ -1,26 +1,26 @@
-
+import React from 'react';
 import  Sol_logo  from '../assets/sol.png'
-import './css/home-page.css'
+import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default function HomePage() {
+export default function AnomaliesPage() {
     return (
         <>
         <header>
-        <nav class="navbar">
-              <div className="logo">
-                Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
-              </div>
-
-          <ul class="topnav">
+          <nav class="navbar">
+                <div className="logo">
+                  Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
+                </div>
+  
+            <ul class="topnav">
               <li><a className="nav-link" href="#">Analytics</a></li>
               <li><a className="nav-link" href="#">Control Center</a></li>
               <li><a className="nav-link" href="#">Anomalies</a></li>
-          </ul>
-        </nav>
-      </header>
+            </ul>
+          </nav>
+        </header>
 
-      <body>
+        <body>
         <div className="page_content">
           
           <div className="row">
@@ -30,7 +30,7 @@ export default function HomePage() {
                   <div className="card">
                     <div className="card-body">
                       <h5 className="card-title">
-                      <div className="text-center">Homepage</div>
+                      <div className="text-center">Anomalies</div>
                       </h5>
 
                     </div>
@@ -43,6 +43,6 @@ export default function HomePage() {
 
         </body>
 
-        </>
+      </>
     );
 }
