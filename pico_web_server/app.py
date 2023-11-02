@@ -6,8 +6,8 @@ from machine import Pin
 
 led = Pin(13, Pin.OUT)
 
-ssid = 'Angelo Soyannwo\'s iPhone'
-password = 'hurpopjm73r7r'
+ssid = 'ssid = 'BU Guest (unencrypted)'
+password = ''
 
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)

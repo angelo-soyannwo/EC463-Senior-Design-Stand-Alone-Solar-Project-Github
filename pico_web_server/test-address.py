@@ -4,8 +4,8 @@ from time import sleep
 import machine
 
 
-ssid = 'iPhone'
-password = 'dankboilit'
+ssid = 'BU Guest (unencrypted)'
+password = ''
 
 def connect():
     #Connect to WLAN
