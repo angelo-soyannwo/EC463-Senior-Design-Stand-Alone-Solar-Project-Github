@@ -45,7 +45,7 @@
   font-family: 'Orbit', sans-serif;
   margin:0;
 }
-body{
+.pagebody{
   width: 100%;
 }
 
@@ -111,5 +111,5 @@ header{
 }
 
 .maxim {
-  padding-top: 100px;
+  padding-top: 120px;
 }

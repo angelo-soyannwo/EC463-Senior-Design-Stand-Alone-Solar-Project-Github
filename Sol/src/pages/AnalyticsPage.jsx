@@ -26,7 +26,7 @@ export default function AnalyticsPage() {
           </nav>
         </header>
 
-        <body>
+        <div className='pagebody'>
         <div className="page_content">
           
           <div className="row">
@@ -47,7 +47,7 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        </body>
+        </div>
 
       </>
     );

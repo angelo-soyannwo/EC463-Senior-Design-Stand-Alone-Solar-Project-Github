@@ -2,10 +2,12 @@
 import  Sol_logo  from '../assets/sol.png'
 import './css/home-page.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link,} from "react-router-dom";
+import { Link, useLocation,} from "react-router-dom";
 
 
 export default function HomePage() {
+
+    const location = useLocation()
     return (
         <>
         <header>
@@ -27,7 +29,7 @@ export default function HomePage() {
         </nav>
       </header>
 
-      <body>
+      <div className='pagebody'>
         <div className="page_content">
           
           <div className="row">
@@ -48,7 +50,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        </body>
+        </div>
 
         </>
     );

@@ -23,7 +23,7 @@ export default function ControlCenterPage() {
           </nav>
         </header>
 
-        <body>
+        <div className='pagebody'>
         <div className="page_content">
           
           <div className="row">
@@ -44,7 +44,7 @@ export default function ControlCenterPage() {
           </div>
         </div>
 
-        </body>
+        </div>
         </>
     );
 }

@@ -1,0 +1,16 @@
+{
+  "name": "application-server",
+  "version": "1.0.0",
+  "description": "20223-2024 Group 15 EC463 Stand Alone Solar Power plant monitoring web server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Angelo Soyannwo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "hbs": "^4.2.0",
+    "mongoose": "^8.0.0"
+  }
+}

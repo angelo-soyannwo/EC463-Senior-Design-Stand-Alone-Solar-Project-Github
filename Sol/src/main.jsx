@@ -12,6 +12,8 @@ import HomePage from "./pages/HomePage";
 import AnomaliesPage from "./pages/AnomaliesPage";
 import ControlCenterPage from "./pages/ControlCenterPage";
 import AnalyticsPage from './pages/AnalyticsPage'
+import LoginPage from './pages/LoginPage'
+import SignUpPage from './pages/SignUpPage'
 
 const router = createBrowserRouter([
   {
@@ -38,11 +40,22 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "Analytics/",
+    path: "analytics/",
     element: <AnalyticsPage />,
     errorElement: <ErrorPage />,
-  }
+  },
 
+  {
+    path: "login/",
+    element: <LoginPage />,
+    errorElement: <ErrorPage />,
+  },
+
+  {
+    path: "sign-up/",
+    element: <SignUpPage />,
+    errorElement: <ErrorPage />,
+  }
 
 ]);
 
