@@ -53,7 +53,7 @@ export default function LoginPage() {
 
         try{
             await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
-              if (res.data=="exist"){
+              if (res.data=="Success"){
                 history("/home")
               } 
               else if (res.data=="notExist"){

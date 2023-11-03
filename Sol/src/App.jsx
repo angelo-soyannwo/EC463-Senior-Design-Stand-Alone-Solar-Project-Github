@@ -10,59 +10,20 @@ import { Link, useNavigate} from "react-router-dom";
 
 function App() {
 
-  // const history=useNavigate();
+    const history=useNavigate();
 
-  // const [email,setEmail]=useState('')
-  // const [password,setPassword]=useState('')
-
-  // async function submit(e){
-  //     e.preventDefault();
-
-  //     try{
-
-  //         await axios.post("http://localhost:8000/",{
-  //             email,password
-  //         })
-  //         .then(res=>{
-  //             if(res.data=="exist"){
-  //                 history("/home",{state:{id:email}})
-  //             }
-  //             else if(res.data=="notexist"){
-  //                 alert("User have not sign up")
-  //             }
-  //         })
-  //         .catch(e=>{
-  //             alert("wrong details")
-  //             console.log(e);
-  //         })
-
-  //     }
-  //     catch(e){
-  //         console.log(e);
-
-  //     }
-
-  // }
-
-
-    //ADD back
-        // const history=useNavigate();
-        // const [email, setEmail] = useState('')
-        // const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     async function submit(e) {
         e.preventDefault();
-        const history=useNavigate();
-        const [email, setEmail] = useState('')
-        const [password, setPassword] = useState('')
 
         try{
             await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
-              if (res.data="exist"){
-                history("/home",)
-              }
-              else if (res.data="notExist"){
-                history("/home",)
+              if (res.data=="Success"){
+                history("/home")
+              } 
+              else if (res.data=="notExist"){
                   alert("You have not signed up")
               }
             }).catch(e=>{
@@ -70,7 +31,7 @@ function App() {
               console.log(e)
             })
         }
-        catch{
+        catch(e){
             console.log(e)
         }
     }

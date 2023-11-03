@@ -131,22 +131,37 @@ app.post('/sign-up', async(req, res)=>{
 })
 
 app.post("/login", async(req,res)=>{
-    const {email,password} = req.body
+    const {email,password} = req.body;
+    Login.findOne({email: email}).then(user => {
 
-    try {
-        const checkEmail = await Login.findOne({email: email});
-
-        if (checkEmail){
-            res.json("emailExists");
+        if (user){
+            if(user.password === password){
+                res.json("Success");
+            }
         }
         else{
-            res.json("notExist");
+            res.json("Incorrect password");
         }
+    }).catch(e => {
+            res.json("notExist");
+        });
+
+    // try {
+    //     // const checkEmail = await Login.findOne({email: email})
+    //     Login.findOne({email: email}).then(user => {
+
+    //         if (user){
+    //             if(user.password === password)
+    //         }
+    //         else{
+    //             res.json("notExist");
+    //         }
+    //     })
             
-    }
-    catch(e){
-        res.json("notExist");
-    }
+    // }
+    // catch(e){
+    //     res.json("notExist");
+    // }
 })
 
 app.listen(8000, ()=>{
