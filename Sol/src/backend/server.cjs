@@ -2,10 +2,26 @@ const express = require("express")
 const cors = require("cors");
 const app = express();
 const mongoose = require('mongoose')
-const Login = require('./mongo.cjs');
+const Login = require('./models/Login.cjs');
+const Profile = require('./models/userProfile.cjs');
+var bodyParser = require('body-parser');
 
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
+// Connecting to database
+mongoose.connect('mongodb://127.0.0.1:27017/sol').then(
+    ()=>{
+        console.log('mongo database connected');
+    }).catch(
+        (e)=>{
+            console.log(e);
+            console.log('database failed');
+        }
+    );
+
+// app.use(express.json())
+// app.use(express.urlencoded({extended: true}))
 
 app.use(cors());
 
@@ -13,57 +29,31 @@ app.get('/', cors(), (res,req)=>{
 
 })
 
-// app.post("/login",async(req,res)=>{
-//     const{email,password}=req.body
+app.post('/getUser', async(req, res) => {
 
-//     try{
-//         const check=await collection.findOne({email:email})
+        const {email} = req.body
+        // console.log(email)
 
-//         if(check){
-//             res.json("exist")
-//         }
-//         else{
-//             res.json("notexist")
-//         }
+        await Profile.findOne({email: email})
+        .then(user => {
+            if (!user){
+                // console.log(user)
+                res.status(400).json({msg: 'There is no user'})
+            }
+            else{
+                // console.log(user)
+                res.json(user)
+            }
+        })
+        .catch(e => {
+                console.log(e);
+                res.json(e);
+        })
+        
+                
+        
 
-//     }
-//     catch(e){
-//         res.json("fail")
-//     }
-
-// })
-
-
-
-// app.post("/signup",async(req,res)=>{
-//     const{email,password}=req.body
-
-//     const data={
-//         email:email,
-//         password:password
-//     }
-
-//     try{
-//         const check=await collection.findOne({email:email})
-
-//         if(check){
-//             res.json("exist")
-//         }
-//         else{
-//             res.json("notexist")
-//             await collection.insertMany([data])
-//         }
-
-//     }
-//     catch(e){
-//         res.json("fail")
-//     }
-
-// })
-
-// app.listen(8000,()=>{
-//     console.log("port connected");
-// })
+    })
 
 
 app.get('/accounts', async(res,req)=>{
@@ -88,31 +78,23 @@ app.get('/accounts', async(res,req)=>{
         });
 
 
-app.post("/", async (req, res)=>{
-    const[email,password] = req.body
-
-    try {
-        const checkEmail = await Login.findOne({email: email});
-
-        if (checkEmail){
-            res.json("exists");
-        }
-        else{
-            res.json("notExist");
-        }
-    }
-    catch(e){
-        res.json("notExist");
-    }
-})
-
 app.post('/sign-up', async(req, res)=>{
 
-    const {email,password} = req.body
-    const data = {
+    // console.log(req.body)
+
+    const {email,password,userName} = req.body
+    const loginData = {
         email:email,
         password:password
     }
+
+    // const profileData = {
+    //     email:email,
+    //     userName:userName,
+    //     user:mongoose.ObjectId(),
+    //     solarArrays:[]
+    // }
+
     try {
         const checkEmail = await Login.findOne({email: email});
 
@@ -121,7 +103,15 @@ app.post('/sign-up', async(req, res)=>{
         }
         else{
             res.json("notExist")
-            await Login.insertMany([data])
+            const profileData = {
+                email:email,
+                userName:userName,
+                user: new mongoose.Types.ObjectId(),
+                solarArrays:[]
+            }
+            await Profile.insertMany([profileData])
+            await Login.insertMany([loginData])
+            
         }
             
     }
@@ -138,30 +128,16 @@ app.post("/login", async(req,res)=>{
             if(user.password === password){
                 res.json("Success");
             }
+            else{
+                res.json("incorrectPassword");
+            }
         }
         else{
-            res.json("Incorrect password");
+            res.json("notExist");
         }
     }).catch(e => {
             res.json("notExist");
         });
-
-    // try {
-    //     // const checkEmail = await Login.findOne({email: email})
-    //     Login.findOne({email: email}).then(user => {
-
-    //         if (user){
-    //             if(user.password === password)
-    //         }
-    //         else{
-    //             res.json("notExist");
-    //         }
-    //     })
-            
-    // }
-    // catch(e){
-    //     res.json("notExist");
-    // }
 })
 
 app.listen(8000, ()=>{

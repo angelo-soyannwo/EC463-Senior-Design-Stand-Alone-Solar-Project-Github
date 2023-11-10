@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider,} from 'react-router-dom'
@@ -14,6 +14,8 @@ import ControlCenterPage from "./pages/ControlCenterPage";
 import AnalyticsPage from './pages/AnalyticsPage'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignUpPage'
+
+
 
 const router = createBrowserRouter([
   {
@@ -59,9 +61,16 @@ const router = createBrowserRouter([
 
 ]);
 
+// const [loggedIn, setLoggedIn] = useState(false)
+
 ReactDOM.createRoot(document.getElementById("root")).render(
+
+
+
   <React.StrictMode>
-    <RouterProvider router={router} />
+    {/* <LoginContext.Provider value={loggedIn, setLoggedIn}> */}
+      <RouterProvider router={router} />
+    {/* </LoginContext.Provider> */}
   </React.StrictMode>
 );
 

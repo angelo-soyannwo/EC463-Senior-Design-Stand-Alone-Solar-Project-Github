@@ -1,60 +1,28 @@
 import React, { useState } from 'react';
 import  Sol_logo  from '../assets/sol.png'
-import './css/home-page.css';
+import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate} from "react-router-dom";
 import axios from 'axios';
-
+import {LoginContext} from '../helper/Context.cjs'
 
 export default function SignUpPage() {
 
-  // const history=useNavigate();
+  // const [loggedIn, setLoggedIn] = useContext(LoginContext)
 
-  //   const [email,setEmail]=useState('')
-  //   const [password,setPassword]=useState('')
-
-  //   async function submit(e){
-  //       e.preventDefault();
-
-  //       try{
-
-  //           await axios.post("http://localhost:8000/signup",{
-  //               email,password
-  //           })
-  //           .then(res=>{
-  //               if(res.data=="exist"){
-  //                   alert("User already exists")
-  //               }
-  //               else if(res.data=="notexist"){
-  //                   history("/home",{state:{id:email}})
-  //               }
-  //           })
-  //           .catch(e=>{
-  //               alert("wrong details")
-  //               console.log(e);
-  //           })
-
-  //       }
-  //       catch(e){
-  //           console.log(e);
-
-  //       }
-
-  //   }
+  
 
     //ADD back
         const history=useNavigate();
         const [email, setEmail] = useState('')
         const [password, setPassword] = useState('')
+        const [userName, setUserName] = useState('')
 
     async function submit(e) {
         e.preventDefault();
-        // const history=useNavigate();
-        // const [email, setEmail] = useState('')
-        // const [password, setPassword] = useState('')
 
         try{
-            await axios.post("http://127.0.0.1:8000/sign-up", {email, password}).then(res=>{
+            await axios.post("http://127.0.0.1:8000/sign-up", {email:email, password:password, userName:userName}).then(res=>{
               if (res.data=="exist"){
                 alert("You already have an account with us")
                 history("/home",{state:{id:email}})
@@ -104,6 +72,11 @@ export default function SignUpPage() {
                         <div className="mb-3">
                           <label className="form-label">Email Address</label>
                           <input type="email" onChange={(e)=>{setEmail(e.target.value)}} className="form-control" id="email-address" name="userEmail" placeholder="email@example.com"></input>
+                        </div>
+
+                        <div className="mb-3">
+                          <label className="form-label">Name</label>
+                          <input type="user-name" onChange={(e)=>{setUserName(e.target.value)}} className="form-control" id="user-name" name="user-name" placeholder="username"></input>
                         </div>
                   
                         <div className="mb-3">

@@ -1,14 +1,18 @@
 
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import  Sol_logo  from './assets/sol.png'
 import  viteLogo  from '/vite.svg'
 // import './App.css';
-import './pages/css/home-page.css';
+import './pages/css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios"
 import { Link, useNavigate} from "react-router-dom";
+import {LoginContext} from './helper/Context.cjs'
+
 
 function App() {
+
+  // const [loggedIn, setLoggedIn] = useContext(LoginContext)
 
     const history=useNavigate();
 
@@ -20,11 +24,14 @@ function App() {
 
         try{
             await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
-              if (res.data=="Success"){
-                history("/home")
+              if (res.data==="Success"){
+                history("/home", {state:{id:email}})
               } 
               else if (res.data=="notExist"){
                   alert("You have not signed up")
+              }
+              else if (res.data=="incorrectPassword"){
+                alert("incorrect login details")
               }
             }).catch(e=>{
               alert("Wrong details")
@@ -39,14 +46,14 @@ function App() {
     return (
       <>
       <header>
-          <nav class="navbar">
+          <nav className="navbar">
                 <div>
                   <Link className="logo" to="/">
                   Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
                   </Link>
                 </div>
   
-            <ul class="topnav">
+            <ul className="topnav">
               <li><Link className="nav-link" to="login">Login</Link></li>
               <li><Link className="nav-link" to="sign-up">Sign Up</Link></li>
             </ul>
@@ -73,12 +80,12 @@ function App() {
                             <h5 className="card-title">Login</h5>
     
                             <div className="mb-3">
-                            <label for="exampleFormControlInput1" className="form-label">Email Address</label>
+                            <label className="form-label">Email Address</label>
                             <input type="email" onChange={(e)=>{setEmail(e.target.value)}} class="form-control" id="email-address" name="userEmail" placeholder="email@example.com"></input>
                             </div>
                     
                             <div className="mb-3">
-                            <label for="inputPassword" className="visually-hidden">Password</label>
+                            <label className="visually-hidden">Password</label>
                             <input type="password" onChange={(e)=>{setPassword(e.target.value)}} class="form-control" id="userPassword" placeholder="Password"></input>
                             </div>
 

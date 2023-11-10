@@ -1,32 +1,60 @@
 import React from 'react';
+import {useEffect, useState} from 'react'
+import axios from 'axios'
 import  Sol_logo  from '../assets/sol.png'
 import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import navbarLink from '../components/navbarLink';
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import ControlPanel from '../components/ControlPanel'
+
 
 
 export default function AnalyticsPage() {
+
+  const { state } = useLocation()
+
+  console.log(state)
+  const [user, setUser] = useState(null)
+  const [email, setEmail] = useState(state.id)
+    
+  useEffect(() => {
+    axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
+      setUser(profile)
+    }).catch(err => {
+      console.log(err)
+    });
+  }, []);
+
+
+  var welcomeMessage =''
+  if(!user){
+    welcomeMessage = 'Homepage'
+  }
+  else{
+    welcomeMessage = user.data.userName.concat('\'s Analytics Page')
+  }
+
     return (
         <>
         <header>
           <nav class="navbar">
               <div>
-              <Link className="logo" to="../home">
+              <Link className="logo" to="../home" state={{id:email}}>
                 Sol <span><img src={Sol_logo} className="sol_logo" alt="Sol logo" /></span>
               </Link>
               </div>
   
             <ul class="topnav">
               {/* <li><a className="nav-link" href="#">Analytics</a></li> */}
-              <li><Link className="nav-link" to="../analytics">Analytics</Link></li>
-              <li><Link className="nav-link" to="../control-center">Control Center</Link></li>
-              <li><Link className="nav-link" to="../anomalies">Anomalies</Link></li>
+              <li><Link className="nav-link" to="../analytics" state={{id:email}}>Analytics</Link></li>
+              <li><Link className="nav-link" to="../control-center" state={{id:email}}>Control Center</Link></li>
+              <li><Link className="nav-link" to="../anomalies" state={{id:email}}>Anomalies</Link></li>
             </ul>
           </nav>
         </header>
 
-        <div className='pagebody'>
+        {/* <div className='pagebody'>
         <div className="page_content">
           
           <div className="row">
@@ -47,7 +75,8 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        </div>
+        </div> */}
+        <ControlPanel title = {welcomeMessage}/>
 
       </>
     );

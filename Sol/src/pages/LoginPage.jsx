@@ -1,46 +1,15 @@
-import React, { useState} from 'react';
+import React, { useState, useContext } from 'react';
 import  Sol_logo  from '../assets/sol.png'
-import './css/home-page.css';
+import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 import axios from "axios"
+import {LoginContext} from '../helper/Context.cjs'
+
 
 export default function LoginPage() {
-
-  // const history=useNavigate();
-
-  // const [email,setEmail]=useState('')
-  // const [password,setPassword]=useState('')
-
-  // async function submit(e){
-  //     e.preventDefault();
-
-  //     try{
-
-  //         await axios.post("http://localhost:8000/",{
-  //             email,password
-  //         })
-  //         .then(res=>{
-  //             if(res.data=="exist"){
-  //                 history("/home",{state:{id:email}})
-  //             }
-  //             else if(res.data=="notexist"){
-  //                 alert("User have not sign up")
-  //             }
-  //         })
-  //         .catch(e=>{
-  //             alert("wrong details")
-  //             console.log(e);
-  //         })
-
-  //     }
-  //     catch(e){
-  //         console.log(e);
-
-  //     }
-
-  // }
+  // const [loggedIn, setLoggedIn] = useContext(LoginContext)
 
 
     const history=useNavigate();
@@ -53,11 +22,14 @@ export default function LoginPage() {
 
         try{
             await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
-              if (res.data=="Success"){
-                history("/home")
+              if (res.data==="Success"){
+                history("/home", {state:{id:email}})
               } 
               else if (res.data=="notExist"){
                   alert("You have not signed up")
+              }
+              else if (res.data=="incorrectPassword"){
+                alert("incorrect login details")
               }
             }).catch(e=>{
               alert("Wrong details")
@@ -105,7 +77,7 @@ export default function LoginPage() {
                             </div>
                     
                             <div className="mb-3">
-                            <label className="visually-hidden">Password</label>
+                            <label className="form-label">Password</label>
                             <input type="password" onChange={(e)=>{setPassword(e.target.value)}} className="form-control" id="userPassword" placeholder="Password"></input>
                             </div>
 
