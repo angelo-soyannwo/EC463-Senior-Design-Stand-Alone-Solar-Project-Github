@@ -4,7 +4,9 @@ import './css/home-page.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation,} from "react-router-dom";
 
-import ControlPanel from '../components/ControlPanel'
+import HomePanel from '../components/HomePanel';
+
+
 import axios from 'axios';
 
 
@@ -54,7 +56,8 @@ export default function HomePage() {
         </nav>
       </header>
 
-            <ControlPanel title = {welcomeMessage}/>
+            <HomePanel title = {welcomeMessage}/>
+            
 
 
       </>

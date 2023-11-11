@@ -6,7 +6,7 @@ import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import navbarLink from '../components/navbarLink';
 import { Link, useLocation } from "react-router-dom";
-import ControlPanel from '../components/ControlPanel'
+import AnalyticsPanel from '../components/AnalyticsPanel'
 
 
 
@@ -76,7 +76,7 @@ export default function AnalyticsPage() {
         </div>
 
         </div> */}
-        <ControlPanel title = {welcomeMessage}/>
+        <AnalyticsPanel title = {welcomeMessage}/>
 
       </>
     );

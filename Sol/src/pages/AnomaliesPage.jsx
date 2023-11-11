@@ -3,7 +3,7 @@ import  Sol_logo  from '../assets/sol.png'
 import './css/landing-page.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation} from "react-router-dom";
-import ControlPanel from '../components/ControlPanel'
+import AnomaliesPanel from '../components/AnomaliesPanel'
 
 import axios from 'axios'
 
@@ -72,7 +72,7 @@ export default function AnomaliesPage() {
         </div>
 
         </div> */}
-        <ControlPanel title = {welcomeMessage}/>
+        <AnomaliesPanel title = {welcomeMessage}/>
 
       </>
     );

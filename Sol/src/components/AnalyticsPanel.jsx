@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useState} from 'react'
 import SolarArrayCard from './SolarArrayCard'
 
-function ControlPanel(props) {
+function AnalyticsPanel(props) {
 
   const [pageName, setPageName] = useState('');
 
@@ -48,4 +48,4 @@ function ControlPanel(props) {
   );
 }
 
-export default ControlPanel
+export default AnalyticsPanel
