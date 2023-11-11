@@ -36,11 +36,14 @@ for responsive development (nodemon restarts the server whenever you make change
 nodemon server.cjs
 ```
 
+If you don't want the server to refresh when you make changes to files then use
 
 ```bash
 node server.cjs
 ```
-Both will currently start the backend server at http://localhost:8000/ (I just selected port 8000 at the time of writing this.
+Both will currently start the backend server at http://localhost:8000/ (I just selected port 8000 at the time of writing this).
+
+__For development work I highly recommend always using nodemon rather than node:__
 
 This port is subject to change and the port can be found in server.js fileat the app.listen() call.
 
