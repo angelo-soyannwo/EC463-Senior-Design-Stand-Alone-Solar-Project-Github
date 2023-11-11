@@ -47,7 +47,7 @@ __For development work I highly recommend always using nodemon rather than node.
 Both will currently start the backend server at http://localhost:8000/ (I just selected port 8000 at the time of writing this).
 
 
-This port is subject to change and the port can be found in server.js fileat the app.listen() call.
+This port is subject to change and the port can be found in server.js file at the app.listen() call.
 
 
 ## Running The React App

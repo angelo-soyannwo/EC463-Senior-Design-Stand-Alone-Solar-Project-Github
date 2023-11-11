@@ -11,21 +11,7 @@ const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mret
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-// Connecting to database
-// mongoose.connect('mongodb://127.0.0.1:27017/sol').then(
-//     ()=>{
-//         console.log('mongo database connected');
-//     }).catch(
-//         (e)=>{
-//             console.log(e);
-//             console.log('database failed');
-//         }
-//     );
 
-
-
-// app.use(express.json())
-// app.use(express.urlencoded({extended: true}))
 
 app.use(cors());
 
@@ -86,27 +72,6 @@ app.post("/login", async(req,res)=>{
             res.json("notExist");
         });
 })
-
-
-// app.post("/login", async(req,res)=>{
-//     const {email,password} = req.body;
-//     Login.findOne({email: email}).then(user => {
-
-//         if (user){
-//             if(user.password === password){
-//                 res.json("Success");
-//             }
-//             else{
-//                 res.json("incorrectPassword");
-//             }
-//         }
-//         else{
-//             res.json("notExist");
-//         }
-//     }).catch(e => {
-//             res.json("notExist");
-//         });
-// })
 
 
 app.post('/getUser', async(req, res) => {
