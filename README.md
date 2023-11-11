@@ -52,7 +52,7 @@ make a new terminal and cd into the Sol/src folder and run
 npm run dev
 ```
 
-This will serve the react front end on http://localhost:5173/
+This will serve the react frontend on http://localhost:5173/ default unless you are running another app on that port (I think) 
 
 
 

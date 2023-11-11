@@ -6,7 +6,7 @@ const Login = require('./models/Login.cjs');
 const Profile = require('./models/userProfile.cjs');
 const SolarArray = require('./models/SolarArray.cjs');
 var bodyParser = require('body-parser');
-const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mretkif.mongodb.net/?retryWrites=true&w=majority'
+const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mretkif.mongodb.net/Sol?retryWrites=true&w=majority'
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
