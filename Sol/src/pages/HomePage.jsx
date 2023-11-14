@@ -4,6 +4,7 @@ import './css/home-page.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useLocation,} from "react-router-dom";
 
+
 import HomePanel from '../components/HomePanel';
 
 
@@ -15,22 +16,46 @@ export default function HomePage() {
 
   const [user, setUser] = useState(null)
   const [email, setEmail] = useState(location.state.id)
+  const [solarArrayList, setSolarArrayList] = useState(null)
+  const [userSolarArrayObjects, setUserSolarArrayObjects] = useState(null)
     
   useEffect(() => {
     axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
       setUser(profile)
+      if (profile) {
+        setSolarArrayList(profile.data.solarArrays);
+          axios.post('http://localhost:8000/getSolarArrays', {array: profile.data.solarArrays}).then( response => {
+            setUserSolarArrayObjects(response);
+            // console.log(response)
+          }).catch(err => {
+              console.log(err)
+            });
+        
+      }
     }).catch(err => {
       console.log(err)
     });
   }, []);
 
 
+  // useEffect(() => {
+  //   axios.post('http://localhost:8000/getSolarArrays', {array: solarArrayList}).then( response => {
+  //     setUserSolarArrayObjects(response)
+  //     console.log(response)
+  //   }).catch(err => {
+  //     console.log(err)
+  //   });
+  // }, []);
+
+  
   var welcomeMessage =''
   if(!user){
     welcomeMessage = 'Homepage'
+
   }
   else{
     welcomeMessage = user.data.userName.concat('\'s Homepage')
+    // console.log(userSolarArrayObjects)
   }
 
 
@@ -56,7 +81,8 @@ export default function HomePage() {
         </nav>
       </header>
 
-            <HomePanel title = {welcomeMessage}/>
+            <HomePanel title = {welcomeMessage} email = {email} solarArrayObjects = {userSolarArrayObjects}/> 
+            {/* solarArrayObjects = {userSolarArrayObjects} */}
             
 
 

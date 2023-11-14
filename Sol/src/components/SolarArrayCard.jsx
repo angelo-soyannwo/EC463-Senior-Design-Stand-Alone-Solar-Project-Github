@@ -6,7 +6,35 @@ import {useState} from 'react'
 
 function SolarArrayCard(props) {
 
-  const [pageName, setPageName] = useState('');
+  const location = props.location;
+  const solarArray = props.solarArray;
+  const solarArrayTitle = 'Solar Array: '.concat(location)
+
+  // return (
+  //   <>
+      
+  //               <div className="col-5"> 
+  //                 <div className="card">
+  //                   <div className="card-body">
+  //                     <h6 className="solarArray-title">
+  //                     <div className="text-left">{solarArrayTitle}</div>
+  //                     <br/>
+  //                     </h6>
+  //                     <div>
+  //                     <p>
+  //                     id: {solarArray._id} <br/>
+  //                     {/* power: {} <br/>
+  //                     current: {} <br/>
+  //                     voltage: {} <br/> */}
+  //                     </p> 
+                      
+  //                     </div>
+                      
+
+  //                   </div>
+  //                 </div>
+  //               </div>
+  //   </>
 
   return (
     <>

@@ -29,7 +29,7 @@ export default function AnalyticsPage() {
 
   var welcomeMessage =''
   if(!user){
-    welcomeMessage = 'Homepage'
+    welcomeMessage = 'Analytics'
   }
   else{
     welcomeMessage = user.data.userName.concat('\'s Analytics Page')

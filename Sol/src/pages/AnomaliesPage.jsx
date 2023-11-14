@@ -27,7 +27,7 @@ export default function AnomaliesPage() {
 
   var welcomeMessage =''
   if(!user){
-    welcomeMessage = 'Homepage'
+    welcomeMessage = 'Anomalies'
   }
   else{
     welcomeMessage = user.data.userName.concat('\'s Anomalies page')

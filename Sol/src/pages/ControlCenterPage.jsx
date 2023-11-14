@@ -25,7 +25,7 @@ export default function ControlCenterPage() {
 
   var welcomeMessage =''
   if(!user){
-    welcomeMessage = 'Homepage'
+    welcomeMessage = 'Control Center'
   }
   else{
     welcomeMessage = user.data.userName.concat('\'s Control Panel')

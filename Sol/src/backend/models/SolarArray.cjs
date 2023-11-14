@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
  
 // Creating Schemas
 const solarArraySchema = new mongoose.Schema({
-    id: {type: mongoose.Schema.Types.ObjectId, required:true},
+    // id: {type: mongoose.Schema.Types.ObjectId, required:true},
     location: {type: String},
     currentVoltage: {type: Decimal128},
     currentCurrent: {type: Decimal128},

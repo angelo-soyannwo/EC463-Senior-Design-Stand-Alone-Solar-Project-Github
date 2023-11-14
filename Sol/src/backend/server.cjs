@@ -6,6 +6,8 @@ const Login = require('./models/Login.cjs');
 const Profile = require('./models/userProfile.cjs');
 const SolarArray = require('./models/SolarArray.cjs');
 var bodyParser = require('body-parser');
+require('dotenv').config({path:'./.env'})
+
 const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mretkif.mongodb.net/Sol?retryWrites=true&w=majority'
 
 app.use(bodyParser.json()) // for parsing application/json
@@ -97,34 +99,114 @@ app.post('/getUser', async(req, res) => {
 
 })
 
+app.post('/getSolarArrays', async(req, res) => {
+
+    const {array} = req.body
+    // console.log(array)
+
+    // console.log(myJsonString)
+
+
+
+    const records = await SolarArray.find().where('_id').in(array).exec();
+    // console.log(records)
+
+    await SolarArray.find({_id: {$in: array}})
+    .then(solarArrays => {
+        if (!solarArrays){
+            // console.log(user)
+            res.status(400).json({msg: 'No solar arrays'})
+        }
+        else{
+            // console.log(1)
+            res.json(solarArrays)
+        }
+    })
+    .catch(e => {
+            console.log(e);
+            res.json(e);
+    })
+
+})
+
 app.post('/createSolarArrayInstance', async(req, res) => {
 
-    const {id,location,currentVoltage,currentCurrent,currentPower,solarPanels} = req.body
+    const {location,solarPanels} = req.body
 
     const Data = {
-        id:id,
         location:location,
-        currentVoltage:currentVoltage,
-        currentCurrent:currentCurrent,
-        currentPower:currentPower,
+        currentCurrent:0,
+        currentVoltage:0,
+        currentPower:0,
         solarPanels:solarPanels
     }
 
     try {
-        const checkArray = await SolarArray.findOne({id:id});
+        // const checkArray = await SolarArray.findOne({id:id});
+
+        // const checkArray = await SolarArray.findById({id});
+
+        // if (checkArray){
+        //     res.json("exists");
+        // }
+        // else{
+            res.json("notExist")
+            await SolarArray.insertMany([Data])
+            
+        // }
+            
+    }
+    catch(e){
+        console.log(e);
+    }
+
+})
+
+app.post('/addSolarArray', async(req, res) => {
+
+    const {email,arrayId} = req.body
+    // const mongoArrayId = mongoose.Types.ObjectId(arrayId);
+
+    try {
+        // const checkArray = await SolarArray.findOne({id:arrayId});
+        const checkArray = await SolarArray.findOne({_id:arrayId});
+        console.log(arrayId)
+
 
         if (checkArray){
+            var val = false
+
+
+            await Profile.findOne({email: email}).then(
+                user => {
+                    // console.log(user)
+                    const ID = new mongoose.Types.ObjectId(arrayId); //may not need anymore
+                    val = user.solarArrays.includes(arrayId, 0);
+                    console.log(user.solarArrays)
+                }
+            );
+
+            if (val){
+                res.json("solarArrayAlreadySelected");
+                return
+            }
+
+            await Profile.updateOne(
+                { email: email},
+                { $push: { solarArrays: arrayId } }
+             )
             res.json("exists");
         }
         else{
+             
             res.json("notExist")
-            await SolarArray.insertMany([Data])
             
         }
             
     }
     catch(e){
         console.log(e);
+        res.json("notExist")
     }
 
 })
@@ -136,6 +218,7 @@ app.post('/createSolarArrayInstance', async(req, res) => {
 mongoose.connect(databaseEntryPoint).then(()=>{
     app.listen(8000, ()=>{
         console.log("port connected")
+        // console.log(process.env.MONGO_URI)
     })
     console.log('mongo database connected');
 }).catch(
