@@ -85,13 +85,15 @@ button{
   
 }
 
-.page_content .row{
+/* .page_content .row{
   flex-wrap: wrap;
-}
+} */
 
-.col {
+.page_content .row .col {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+
+

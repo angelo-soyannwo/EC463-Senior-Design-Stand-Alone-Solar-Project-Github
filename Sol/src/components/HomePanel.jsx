@@ -136,8 +136,10 @@ else{
             <div className="row">
               <div className="col"></div>
 
-                {arrayList(solarArrays.data)}
 
+              <div className="col">
+                {arrayList(solarArrays.data)}
+                </div>
 
               {/* <SolarArrayCard title = {'Solar Array '}/> */}
 

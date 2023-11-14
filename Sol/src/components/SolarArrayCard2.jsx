@@ -38,7 +38,6 @@ function SolarArrayCard2(props) {
   return (
     <>
       
-                <div className="col-5"> 
                   <div className="card">
                     <div className="card-body">
                       <h6 className="solarArray-title">
@@ -59,7 +58,6 @@ function SolarArrayCard2(props) {
 
                     </div>
                   </div>
-                </div>
     </>
   );
 }
