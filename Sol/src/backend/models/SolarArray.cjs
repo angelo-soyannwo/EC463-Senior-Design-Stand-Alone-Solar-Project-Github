@@ -4,11 +4,11 @@ const mongoose = require("mongoose");
  
 // Creating Schemas
 const solarArraySchema = new mongoose.Schema({
-    // id: {type: mongoose.Schema.Types.ObjectId, required:true},
+    id: {type: String},
     location: {type: String},
-    currentVoltage: {type: Decimal128},
-    currentCurrent: {type: Decimal128},
-    currentPower: {type: Decimal128},
+    Voltage_reading: {type: String},
+    Current_reading: {type: String},
+    currentPower: {type: String},
     solarPanels: [{type: mongoose.Schema.Types.ObjectId, ref:'SolarPanels'}],
 })
 

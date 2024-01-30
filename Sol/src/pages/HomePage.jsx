@@ -83,6 +83,8 @@ export default function HomePage() {
 
             <HomePanel title = {welcomeMessage} email = {email} solarArrayObjects = {userSolarArrayObjects}/> 
             {/* solarArrayObjects = {userSolarArrayObjects} */}
+
+
             
 
 

@@ -48,12 +48,15 @@ function HomePanel(props) {
 
     return (array.map((solarArray) => {
       // console.log(solarArray);
-      console.log(solarArray.currentCurrent.$numberDecimal)
+      console.log(solarArray.currentCurrent)
       return(
         <SolarArrayCard2 
         location={solarArray.location}  
-        current={solarArray.currentCurrent.$numberDecimal} 
-        voltage={solarArray.currentVoltage.$numberDecimal}/>
+        current={solarArray.Current_reading} 
+        voltage={solarArray.Voltage_reading}/>
+
+        // current={solarArray.currentCurrent.$numberDecimal} 
+        // voltage={solarArray.currentVoltage.$numberDecimal}/>
       );
     })
     );

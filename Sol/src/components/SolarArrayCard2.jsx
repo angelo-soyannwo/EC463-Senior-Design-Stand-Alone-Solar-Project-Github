@@ -46,8 +46,8 @@ function SolarArrayCard2(props) {
                       </h6>
                       <div>
                       <p>
-                      current: {props.current}<br/>
-                      voltage: {props.voltage}<br/>
+                      current: {props.current} mA<br/>
+                      voltage: {props.voltage} V<br/>
                       {/* current: <br/>
                       voltage: <br/>  */}
                       {/* power: <br/> */}

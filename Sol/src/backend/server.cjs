@@ -7,8 +7,15 @@ const Profile = require('./models/userProfile.cjs');
 const SolarArray = require('./models/SolarArray.cjs');
 var bodyParser = require('body-parser');
 require('dotenv').config({path:'./.env'})
+const { MongoClient } = require("mongodb");
 
 const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mretkif.mongodb.net/Sol?retryWrites=true&w=majority'
+const client = new MongoClient(databaseEntryPoint);
+
+ // Reference the database to use
+ const dbName = "Sol";
+
+ const db = client.db(dbName);
 
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
@@ -134,9 +141,10 @@ app.post('/createSolarArrayInstance', async(req, res) => {
     const {location,solarPanels} = req.body
 
     const Data = {
+        id: new mongoose.Types.ObjectId().toString(),
         location:location,
-        currentCurrent:0,
-        currentVoltage:0,
+        Current_reading:0,
+        Voltage_reading:0,
         currentPower:0,
         solarPanels:solarPanels
     }
@@ -208,6 +216,81 @@ app.post('/addSolarArray', async(req, res) => {
         console.log(e);
         res.json("notExist")
     }
+
+})
+
+
+app.post('/getDay', async(req, res) => {
+
+    await client.connect();
+    const db = client.db(dbName);
+
+    const {array} = req.body
+    console.log(array)
+
+
+
+    const col = db.collection("solar_data");
+    await col.findOne().then(result => {
+        console.log(result)
+        console.log('------------------')
+        if(result){
+            res.json(result)
+        }
+        else{
+            res.json('failed to find any')
+        }
+    })
+    
+
+    // try{
+    //     await col.find().then(
+    //         result => {
+    //             if(result){
+    //                 console.log(result)
+    //                 res.json(result)
+    //             }
+    //             else{
+    //                 console.log('failed')
+    //                 res.json(result)
+    //             }
+    //         }
+    //     ).catch((e) => {res.json('an error has occured: '.concat(e))})
+    // }
+    // catch(e) {
+    //     console.log(e)
+    //     res.json('an error has occured: '.concat(e))
+    // }
+
+
+    
+
+
+
+    // console.log(array)
+
+    // console.log(myJsonString)
+
+
+
+    // const records = await SolarArray.find().where('_id').in(array).exec();
+    // // console.log(records)
+
+    // await SolarArray.find({_id: {$in: array}})
+    // .then(solarArrays => {
+    //     if (!solarArrays){
+    //         // console.log(user)
+    //         res.status(400).json({msg: 'No solar arrays'})
+    //     }
+    //     else{
+    //         // console.log(1)
+    //         res.json(solarArrays)
+    //     }
+    // })
+    // .catch(e => {
+    //         console.log(e);
+    //         res.json(e);
+    // })
 
 })
 
