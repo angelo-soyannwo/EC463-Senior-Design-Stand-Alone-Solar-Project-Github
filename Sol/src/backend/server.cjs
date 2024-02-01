@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const Login = require('./models/Login.cjs');
 const Profile = require('./models/userProfile.cjs');
 const SolarArray = require('./models/SolarArray.cjs');
+const Day = require('./models/Day.cjs');
 var bodyParser = require('body-parser');
 require('dotenv').config({path:'./.env'})
 const { MongoClient } = require("mongodb");
@@ -225,14 +226,10 @@ app.post('/getDay', async(req, res) => {
     await client.connect();
     const db = client.db(dbName);
 
-    const {array} = req.body
-    console.log(array)
-
-
 
     const col = db.collection("solar_data");
     await col.findOne().then(result => {
-        console.log(result)
+        // console.log(result)
         console.log('------------------')
         if(result){
             res.json(result)
@@ -241,31 +238,6 @@ app.post('/getDay', async(req, res) => {
             res.json('failed to find any')
         }
     })
-    
-
-    // try{
-    //     await col.find().then(
-    //         result => {
-    //             if(result){
-    //                 console.log(result)
-    //                 res.json(result)
-    //             }
-    //             else{
-    //                 console.log('failed')
-    //                 res.json(result)
-    //             }
-    //         }
-    //     ).catch((e) => {res.json('an error has occured: '.concat(e))})
-    // }
-    // catch(e) {
-    //     console.log(e)
-    //     res.json('an error has occured: '.concat(e))
-    // }
-
-
-    
-
-
 
     // console.log(array)
 
@@ -292,6 +264,20 @@ app.post('/getDay', async(req, res) => {
     //         res.json(e);
     // })
 
+})
+
+app.get('/getDays', async(req, res) => {
+
+    var docs = await Day.find({}).then((result) => {
+        if(result) {
+            // console.log(result)
+            res.json(result)
+        }
+        else{
+            res.json('failed to retrieve power data')
+        }
+    })
+    
 })
 
 // app.listen(8000, ()=>{

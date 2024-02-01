@@ -10,6 +10,7 @@ import axios from "axios"
 import { Alert } from "bootstrap";
 import {Chart as ChartJS } from "chart.js/auto"
 import {Line} from "react-chartjs-2"
+import {MDBTable, MDBTableHead, MDBTableBody, MDBRow, MDBCol, MDBContainer} from "mdb-react-ui-kit"
 
 
 
@@ -20,6 +21,8 @@ function AnalyticsPanel(props) {
   const [times, setTimes] = useState(null);
   const [power, setPower] = useState(null);
   const [loading, setLoading] = useState(null)
+  const [loading2, setLoading2] = useState(null)
+  const [days, setDays] = useState([])
 
   const sdk = new ChartsEmbedSDK({
     baseUrl: "https://charts.mongodb.com/charts-embedding-examples-wgffp", // ~REPLACE~ with the Base URL from your Embed Chart dialog.
@@ -33,14 +36,16 @@ function AnalyticsPanel(props) {
   useEffect(() => {
 
     setLoading(true)
+    setLoading2(true)
+    
 
     axios.post('http://localhost:8000/getDay',).then((result) => {
       try{
         if(result){
           setPower(result.data.power.map(item => item.$numberDecimal))
           setTimes(result.data.times)
-          console.log(result.data.power.map(item => item.$numberDecimal))
-          console.log(result.data.times)
+          // console.log(result.data.power.map(item => item.$numberDecimal))
+          // console.log(result.data.times)
         }
       }
       catch(err){
@@ -51,8 +56,46 @@ function AnalyticsPanel(props) {
       }
       
     })
+
+    axios.get('http://localhost:8000/getDays').then(result => {
+      try{
+        setDays(result.data)
+        // console.log(result.data)
+      }
+      catch(err){
+        console.log(err)
+        Alert.alert('sorry an error occcured whilst trying to get the days')
+      }
+      finally{
+        setLoading2(false)
+      }
+    })
     
   }, [])
+
+  function arrayList(array){
+    if (!array || array === undefined){
+      return null
+    }
+
+    return (array.map((item, index) => {
+      // console.log(solarArray);
+      
+      return(
+        <MDBTableBody key={index}>
+          <tr>
+            <th scope="row">{index+1}</th>
+            <td>
+              {/* {item} */}
+              {item.date.slice(0, 10)}
+            </td>
+          </tr>
+        </MDBTableBody>
+
+      );
+    })
+    );
+  }
 
   
 
@@ -75,7 +118,11 @@ function AnalyticsPanel(props) {
                       </h5>
 
                     </div>
-                  { loading ? null : <Line
+                  { loading ? null : 
+
+                  <div style={{marginTop: "20px"}}>
+                  
+                  <Line
                                   data={{
                                     labels: times,
                                     datasets: [
@@ -99,7 +146,51 @@ function AnalyticsPanel(props) {
                                       },
                                     },
                                   }}
-                    />}
+                    />
+
+                    </div>
+                    
+                    }
+
+
+                    {loading2 ? null : 
+                    
+                    <MDBContainer>
+                      <div style={{marginTop: "100px"}}>
+
+                        <MDBRow>
+                          <MDBCol size="12">
+                          <MDBTableHead>
+                            <tr>
+                              <th scope="col">No.</th>
+                              <th scope="col">Day</th>
+                            </tr>
+                          </MDBTableHead>
+
+                          {days.length === 0 ? 
+
+                          (<MDBTable className="align-center mb-0">
+
+                            <tr>
+                              <td colSpan={2} className='text-center mb-0'>No data found</td>
+                            </tr>
+                          </MDBTable>)
+                          
+                          : 
+                          
+                          arrayList(days)
+
+
+
+                          }
+
+                          </MDBCol>
+                        </MDBRow>
+                      </div>
+                    </MDBContainer>
+                    }
+
+                    
                 </div>
 
                 <div className="col"></div>
