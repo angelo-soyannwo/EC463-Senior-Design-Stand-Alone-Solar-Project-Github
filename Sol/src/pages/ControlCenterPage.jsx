@@ -12,14 +12,22 @@ export default function ControlCenterPage() {
 
   console.log(state)
   const [user, setUser] = useState(null)
-  const [email, setEmail] = useState(state.id)
+  const [email, setEmail] = useState("")
     
   useEffect(() => {
-    axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
-      setUser(profile)
-    }).catch(err => {
-      console.log(err)
-    });
+    const getUser = async() => {
+      var userJsonString = localStorage.getItem("currentUser")
+      var user = JSON.parse(userJsonString)
+      setEmail(user.email)
+      setUser(user)
+    }
+
+    getUser();
+    // axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
+    //   setUser(profile)
+    // }).catch(err => {
+    //   console.log(err)
+    // });
   }, []);
 
 
@@ -28,7 +36,8 @@ export default function ControlCenterPage() {
     welcomeMessage = 'Control Center'
   }
   else{
-    welcomeMessage = user.data.userName.concat('\'s Control Panel')
+    welcomeMessage = user.userName.concat('\'s Control Panel')
+    // welcomeMessage = user.data.userName.concat('\'s Control Panel')
   }
 
     return (

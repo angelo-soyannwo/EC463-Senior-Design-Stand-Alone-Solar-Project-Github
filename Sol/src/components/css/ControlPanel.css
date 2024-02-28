@@ -42,7 +42,15 @@ header{
   border-bottom: 2px solid transparent;
 }
 
-.topnav .nav-link:hover{
+.topnav .nav-link:hover {
+  border-bottom: 2px solid;
+}
+
+div .btn:hover{
+  border: 1px solid;
+}
+
+.tableRow:hover {
   border-bottom: 2px solid;
 }
 

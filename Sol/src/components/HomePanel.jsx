@@ -24,6 +24,8 @@ function HomePanel(props) {
     axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
       setUser(profile)
       if (profile) {
+        localStorage.setItem("currentUser", JSON.stringify(profile.data));
+        console.log(profile.data)
         // setSolarArrayList(profile.data.solarArrays);
           axios.post('http://localhost:8000/getSolarArrays', {array: profile.data.solarArrays}).then( response => {
             setSolarArrayObjects(response);
@@ -48,7 +50,6 @@ function HomePanel(props) {
 
     return (array.map((solarArray) => {
       // console.log(solarArray);
-      console.log(solarArray.currentCurrent)
       return(
         <SolarArrayCard2 
         location={solarArray.location}  

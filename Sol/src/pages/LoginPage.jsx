@@ -21,8 +21,12 @@ export default function LoginPage() {
         e.preventDefault();
 
         try{
-            await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
+            await axios.post("http://localhost:8000/login", {email, password}).then(async(res)=>{
               if (res.data==="Success"){
+                await axios.post("http://localhost:8000/getUser", {email}).then(async(user)=>{
+                  window.localStorage.setItem("currentUser", JSON.stringify(user));
+                }
+                );
                 history("/home", {state:{id:email}})
               } 
               else if (res.data=="notExist"){

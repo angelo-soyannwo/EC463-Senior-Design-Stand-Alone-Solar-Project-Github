@@ -6,9 +6,13 @@ const Login = require('./models/Login.cjs');
 const Profile = require('./models/userProfile.cjs');
 const SolarArray = require('./models/SolarArray.cjs');
 const Day = require('./models/Day.cjs');
+const Luminance = require('./models/Luminance.cjs');
+const Temperature = require('./models/Temperature.cjs');
+const Graph = require('./models/Graph.cjs');
 var bodyParser = require('body-parser');
 require('dotenv').config({path:'./.env'})
 const { MongoClient } = require("mongodb");
+const { useReducer } = require("react");
 
 const databaseEntryPoint = 'mongodb+srv://seun:JGOf3ykPlQ3ilDac@sol-cluster.mretkif.mongodb.net/Sol?retryWrites=true&w=majority'
 const client = new MongoClient(databaseEntryPoint);
@@ -230,7 +234,6 @@ app.post('/getDay', async(req, res) => {
     const col = db.collection("solar_data");
     await col.findOne().then(result => {
         // console.log(result)
-        console.log('------------------')
         if(result){
             res.json(result)
         }
@@ -279,6 +282,48 @@ app.get('/getDays', async(req, res) => {
     })
     
 })
+
+app.get('/get_luminance_and_temp', async(req, res) => {
+    await Temperature.findOne({day: "current_day"})
+    .then(async(temp) => {
+        if (!temp){
+            // console.log(user)
+            res.status(400).json({msg: 'There is no data'})
+        }
+        else{
+            // console.log(user)
+            await Luminance.findOne({day: "current_day"}).then(luminance => {
+                if (!luminance){
+                    console.log('1')
+                    res.json(temp)
+                }
+                else{
+                    var dataObject = {luminance, temp}
+                    res.json(dataObject)
+                }
+            })
+            
+        }
+    })
+    .catch(e => {
+            console.log(e);
+            res.json(e);
+    })
+
+})
+
+app.get('/luminanceTempGraphData',  async(req, res) => {
+    await Graph.find({}).then((result) => {
+        if(result) {
+            // console.log(result)
+            res.json(result)
+        }
+        else{
+            res.json('failed to retrieve power data')
+        }
+    })
+})
+
 
 // app.listen(8000, ()=>{
 //     console.log("port connected")
