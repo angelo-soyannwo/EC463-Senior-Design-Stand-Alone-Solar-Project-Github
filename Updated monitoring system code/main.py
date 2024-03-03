@@ -1,7 +1,7 @@
 # Import necessary libraries
 import machine, utime, onewire, ds18x20
 from ina219 import INA219
-from bh1750 import BH1750
+#from bh1750 import BH1750
 
 # Initialize I2C for INA219 and BH1750
 i2c_ina219 = machine.I2C(0, scl=machine.Pin(1), sda=machine.Pin(0))
@@ -11,7 +11,7 @@ i2c_bh1750 = machine.I2C(0, scl=machine.Pin(21), sda=machine.Pin(20))  # Adjust 
 sensor_ina219 = INA219(i2c_ina219, 0x40)
 
 # BH1750 light sensor setup
-sensor_bh1750 = BH1750(i2c_bh1750, 0x23)
+#sensor_bh1750 = BH1750(i2c_bh1750, 0x23)
 
 # Function to calculate actual voltage considering the voltage divider
 def actual_voltage(measured_voltage):
@@ -29,8 +29,9 @@ while True:
     try:
         measured_voltage = sensor_ina219.getBusVoltage_V()  # Bus Voltage in volts
         current = sensor_ina219.getCurrent_mA()  # Current in milliamps     # Connect Vin of INA219 to the + of load
+        real_current = current/1000
         adjusted_voltage = actual_voltage(measured_voltage)  # Adjusted voltage in volts
-        print(f"Adjusted Voltage: {adjusted_voltage:.2f} V, Current: {current:.2f} mA")
+        print(f"Adjusted Voltage: {adjusted_voltage:.2f} V, real_current: {current:.2f} mA")
     except Exception as e:
         print("INA219 read error:", e)
 
@@ -43,12 +44,12 @@ while True:
         print(f"DS18B20 Temperature (ºC): {tempC:.2f}, Temperature (ºF): {tempF:.2f}")
 
     # BH1750 sensor data reading for solar irradiation
-    try:
-        lux = sensor_bh1750.luminance(BH1750.ONCE_HIRES_1)
-        solar_irradiation = lux / 126.7
-        print("Solar Irradiation: {:.2f} W/m²".format(solar_irradiation))
-    except OSError as e:
-        print("Failed to read from BH1750 sensor, error:", e)
+    #try:
+        #lux = sensor_bh1750.luminance(BH1750.ONCE_HIRES_1)
+       # solar_irradiation = lux / 126.7
+        #print("Solar Irradiation: {:.2f} W/m²".format(solar_irradiation))
+   # except OSError as e:
+        #print("Failed to read from BH1750 sensor, error:", e)
 
     # Sleep for a short duration (adjust as needed)
     utime.sleep(2)
