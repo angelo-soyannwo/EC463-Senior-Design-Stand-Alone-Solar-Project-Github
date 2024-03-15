@@ -223,12 +223,12 @@ function AnalyticsPanel(props) {
                                         borderColor: "#064FF0",
                                       },
 
-                                      // {
-                                      //   label: 'luminance',
-                                      //   data: luminances,
-                                      //   backgroundColor: "yellow",
-                                      //   borderColor: "yellow",
-                                      // },
+                                      {
+                                        label: 'luminance',
+                                        data: luminances,
+                                        backgroundColor: "yellow",
+                                        borderColor: "yellow",
+                                      },
                                     ]
                                   }}
                                   options={{
