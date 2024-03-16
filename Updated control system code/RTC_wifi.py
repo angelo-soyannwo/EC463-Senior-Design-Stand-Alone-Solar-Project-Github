@@ -1,10 +1,13 @@
 import network
-from machine import RTC
+from machine import Pin, RTC
 import rp2
 import sys
 import utime as time
 import usocket as socket
 import ustruct as struct
+
+led = Pin("LED", Pin.OUT)
+led.low()
 
 ssid, password = "Verizon_6FRDHP", "grip9-wordy-con"
 
@@ -25,6 +28,12 @@ def getTimeNTP():
         s.settimeout(1)
         res = s.sendto(NTP_QUERY, addr)
         msg = s.recv(48)
+    except:
+        for x in range(4):
+            led.high()
+            time.sleep(0.05)
+            led.low()
+            time.sleep(0.05)        
     finally:
         s.close()
     ntp_time = struct.unpack("!I", msg[40:44])[0]
@@ -40,22 +49,30 @@ def connectWIFI():
     wlan.active(True)
     wlan.connect(ssid, password)
         
-    max_wait = 10
+    max_wait = 5
     print('Waiting for connection')
-    while max_wait > 10:
+    #try:
+    while max_wait > 0:
         if wlan.status() < 0 or wlan.status() >= 3:
             break
         max_wait -= 1    
-        sleep(1)
+        time.sleep(1)
     status = None
     if wlan.status() != 3:
+        for x in range(2):
+            led.high()
+            time.sleep(0.2)
+            led.low()
+            time.sleep(0.2) 
         raise RuntimeError('Connections failed')
+        
     else:
         status = wlan.ifconfig()
         print('connection to', ssid,'succesfull established!', sep=' ')
         print('IP-adress: ' + status[0])
     ipAddress = status[0]
-
+    #except:
+        
 
 
 if __name__ == "__main__":

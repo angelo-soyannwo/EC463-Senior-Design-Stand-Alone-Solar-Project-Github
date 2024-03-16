@@ -119,5 +119,10 @@ def dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, daySta
         time.sleep(0.001)
         
 if __name__ == "__main__":
+    
+    led.high()
+    time.sleep(0.5)
+    led.low()
+        
     calibrateRTC()
     dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, dayStart, dayEnd)
