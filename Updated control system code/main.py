@@ -2,6 +2,7 @@ import RTC_wifi
 import time
 from machine import Pin, RTC
 from math import floor
+import ManualController
 
 dir_pin = 18
 step_pin = 17
@@ -22,11 +23,11 @@ total_steps = SPR*total_rotations    #200*20 = 4000
 #For demo purposes, speeds up daily process by a factor of timeFactor.
 #Example: timeFactor of 4 allows process of 24 hours to complete in 6 hours.
 #Probably want to set time factor of 288 to complete day process in 5 minutes.
-timeFactor = 360
+timeFactor = 288
 top_pauseTime = 3600            #stay in top position for 1 hour
 dayStart = 21600             #6 hours (into the day)
 dayEnd = 64800               #18 hours (into the day)
-operating_daytime = dayEnd - dayStart           #43200 seconds in 12 hours, motor only moves in daytime
+#operating_daytime = dayEnd - dayStart           #43200 seconds in 12 hours, motor only moves in daytime
 
 def calibrateRTC():
     #Update Pico RTC datetime on startup
@@ -35,15 +36,15 @@ def calibrateRTC():
     rtc = RTC()  
     RTC_wifi.setTimeRTC(rtc)      # set time, from RTFC_wifi module
     print()
-    print(rtc.datetime())      # display current datetime
+    print(time.localtime())      # display current datetime
     led.high()              #show successful calibration
 
 def rotateMotor(steps, direction, delay, currSteps):
     for x in range(steps):
         DIR.value(direction)
-        STEP.value(1)
+        STEP.high()
         time.sleep(delay)
-        STEP.value(0)
+        STEP.low()
         time.sleep(delay)
         
         if direction == CW:
@@ -53,11 +54,12 @@ def rotateMotor(steps, direction, delay, currSteps):
             
     return currSteps
     
-    
-def dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, dayStart, dayEnd):
+
+def dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
     currSteps = 0             #increases with CW steps, decreases CCW
     targetSteps = 0
     TFday = 86400/timeFactor   #seconds in a day time factored
+    operating_daytime = dayEnd - dayStart
     TFdayStart = dayStart/timeFactor
     TFdayEnd = dayEnd/timeFactor
     timeframe = operating_daytime/timeFactor    #Time for day-cycle completion, for demo
@@ -105,8 +107,8 @@ def dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, daySta
             elif currSteps > targetSteps:
                 currSteps = rotateMotor(currSteps - targetSteps, CCW, delay, currSteps)
         
-        #Only print every 10 seconds, excessive printing slows program down
-        if TFcurrDay % 3 == 0:
+        #Only print every 10 seconds, printing slows program down
+        if TFcurrDay % 10 == 0:
             if printed == False:
                 print("TFcurrDay: ", TFcurrDay)
                 print("targetSteps: ", targetSteps)
@@ -116,13 +118,21 @@ def dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, daySta
             printed = False
                 
             
-        time.sleep(0.001)
+         time.sleep(0.001)
         
 if __name__ == "__main__":
     
     led.high()
     time.sleep(0.5)
     led.low()
-        
-    calibrateRTC()
-    dayProcess(timeFactor, operating_daytime, top_pauseTime, total_steps, dayStart, dayEnd)
+    try:
+        calibrateRTC()
+    except:
+        print("Warning: Time not calibrated")
+        print(time.localtime())
+        print("Calibrate time manually")
+        ManualController.RTC_manual()
+        #pass
+    
+    #On LCD: "Set reflectors to lowest position."
+    dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)

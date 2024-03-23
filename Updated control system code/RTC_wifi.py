@@ -9,7 +9,7 @@ import ustruct as struct
 led = Pin("LED", Pin.OUT)
 led.low()
 
-ssid, password = "Verizon_6FRDHP", "grip9-wordy-con"
+ssid, password = "BU Guest (unencrypted)", ""
 
 # Timezone offset from GMT
 GMT_OFFSET = 3600 * 4 # 3600 = 1 h (wintertime)
@@ -25,15 +25,15 @@ def getTimeNTP():
     addr = socket.getaddrinfo(NTP_HOST, 123)[0][-1]
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.settimeout(1)
+        s.settimeout(2)
         res = s.sendto(NTP_QUERY, addr)
         msg = s.recv(48)
     except:
         for x in range(4):
             led.high()
-            time.sleep(0.05)
+            time.sleep(0.1)
             led.low()
-            time.sleep(0.05)        
+            time.sleep(0.1)        
     finally:
         s.close()
     ntp_time = struct.unpack("!I", msg[40:44])[0]
@@ -84,4 +84,3 @@ if __name__ == "__main__":
     print(time.localtime())                  #yr,mnth,dy,hr,min,sec,wkdy,yrdy --- Still based on RTC
     #print(time.mktime(rtc.datetime()))       #Don't use rtc.datetime to convert to epoch seconds
     print(time.mktime(time.localtime()))     #Must use localtime, NOT datetime (order is different)
-
