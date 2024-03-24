@@ -2,7 +2,9 @@ import RTC_wifi
 import time
 from machine import Pin, RTC
 from math import floor
-import ManualController
+import asyncMC
+import uasyncio
+import queue
 
 dir_pin = 18
 step_pin = 17
@@ -43,21 +45,17 @@ def rotateMotor(steps, direction, delay, currSteps):
     for x in range(steps):
         DIR.value(direction)
         STEP.high()
-        time.sleep(delay)
+        uasyncio.sleep(delay)
         STEP.low()
-        time.sleep(delay)
+        uasyncio.sleep(delay)
         
         if direction == CW:
             currSteps += 1
         else:
-            currSteps -= 1
-            
+            currSteps -= 1       
     return currSteps
     
-
-def dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
-    currSteps = 0             #increases with CW steps, decreases CCW
-    targetSteps = 0
+def TFoperations(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
     TFday = 86400/timeFactor   #seconds in a day time factored
     operating_daytime = dayEnd - dayStart
     TFdayStart = dayStart/timeFactor
@@ -72,10 +70,38 @@ def dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
     #Used to find current steps position to rotate to, based on time in the day
     step_constant = (2/(timeframe - TFtop_pauseTime))*total_steps
     
+    return TFday, operating_daytime, TFdayStart, TFdayEnd, timeframe, TFtop_pauseTime, delay, step_constant
+
+async def dayProcess(q, timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
+    currSteps = 0             #increases with CW steps, decreases CCW
+    targetSteps = 0
+    TFday, operating_daytime, TFdayStart, TFdayEnd, timeframe, TFtop_pauseTime, delay, step_constant = TFoperations(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)
+    
     printed = False
     print("Begin")
     
     while True:
+        if not q.empty():
+            update = await q.get()
+            if update[0]==0:   #updated RTC
+                #reflectors go back to bottom?
+                #not for now:
+                pass
+            elif update[0]==1:
+                #non-async manual_motor in asyncMC
+                #manual motor mode is done, reset reflectors back to bottom with limit switch
+                pass
+            elif update[0]==2:
+                print(dayStart)
+                print(TFdayStart)
+                dayStart, dayEnd, top_pauseTime = update[1:]
+                TFday, operating_daytime, TFdayStart, TFdayEnd, timeframe, TFtop_pauseTime, delay, step_constant = TFoperations(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)
+                print(dayStart)
+                print(TFdayStart)
+            elif update[0]==3:
+                timeFactor = update[1]
+                TFday, operating_daytime, TFdayStart, TFdayEnd, timeframe, TFtop_pauseTime, delay, step_constant = TFoperations(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)
+        
         currTime = time.localtime()
         (year,month,day,hour,minute,sec,wkday,yrday) = currTime
         dayBegEpoch = time.mktime((year,month,day,0,0,0,wkday,yrday))
@@ -116,14 +142,17 @@ def dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd):
                 printed = True
         else:
             printed = False
-                
-            
-         time.sleep(0.001)
         
-if __name__ == "__main__":
+        await uasyncio.sleep(0.005)
+
+async def main():
+    q = queue.Queue()
+    
+    #LCD screen coroutine
+    uasyncio.create_task(asyncMC.menu(q, dayStart, dayEnd, top_pauseTime, timeFactor))
     
     led.high()
-    time.sleep(0.5)
+    uasyncio.sleep(0.5)
     led.low()
     try:
         calibrateRTC()
@@ -131,8 +160,16 @@ if __name__ == "__main__":
         print("Warning: Time not calibrated")
         print(time.localtime())
         print("Calibrate time manually")
-        ManualController.RTC_manual()
+        #ManualController.RTC_manual()
         #pass
     
     #On LCD: "Set reflectors to lowest position."
-    dayProcess(timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)
+    #Actually: reset to lowest position using limit switch on startup
+    print("dayProcess started")
+    await dayProcess(q, timeFactor, top_pauseTime, total_steps, dayStart, dayEnd)
+    print("dayProcess ended")
+    
+if __name__ == "__main__":
+    uasyncio.run(main())
+    
+    

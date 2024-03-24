@@ -9,7 +9,8 @@ import ustruct as struct
 led = Pin("LED", Pin.OUT)
 led.low()
 
-ssid, password = "BU Guest (unencrypted)", ""
+ssid, password = "DARLIE", "8TIERrack!"
+#ssid, password = "BU Guest (unencrypted)", ""
 
 # Timezone offset from GMT
 GMT_OFFSET = 3600 * 4 # 3600 = 1 h (wintertime)
