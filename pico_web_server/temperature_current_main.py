@@ -276,6 +276,61 @@ def pushOneDay(filter_dict, update_dict):
         response.close()
     except Exception as e:
         print(e)
+def updateCurrentAndVoltage(filter_dict, update_dict):
+    try:
+        headers = {
+            "api-key": "fuQa5n8PAJ38cvm0m1kAjfCuI3slNoBpPHYud7uTR2RsIeY75F8RcGGSAUGjPWXB",
+            #"Connection": "upgrade",
+            #"Upgrade": "HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11"
+        }
+        update = {"$set": update_dict}
+        searchPayload = {
+            "dataSource": "Sol-Cluster",
+            "database": "Sol",
+            "collection": "solararrays",
+            "filter": filter_dict,
+            "update": update_dict,
+            "upsert": True,
+        }
+        response = requests.post(url + "updateOne", headers=headers, json=searchPayload)
+        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
+        if response.status_code >= 200 and response.status_code < 300:
+            print("Success Response")
+            
+        else:
+            print(response.status_code)
+            print("Error")
+        response.close()
+    except Exception as e:
+        print(e)
+        
+def insertAnomaly(filter_dict, update_dict):
+    try:
+        headers = {
+            "api-key": "fuQa5n8PAJ38cvm0m1kAjfCuI3slNoBpPHYud7uTR2RsIeY75F8RcGGSAUGjPWXB",
+            #"Connection": "upgrade",
+            #"Upgrade": "HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11"
+        }
+        update = {"$set": update_dict}
+        searchPayload = {
+            "dataSource": "Sol-Cluster",
+            "database": "Sol",
+            "collection": "anomalies",
+            "filter": filter_dict,
+            "update": update_dict,
+            "upsert": True,
+        }
+        response = requests.post(url + "updateOne", headers=headers, json=searchPayload)
+        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
+        if response.status_code >= 200 and response.status_code < 300:
+            print("Success Response")
+            
+        else:
+            print(response.status_code)
+            print("Error")
+        response.close()
+    except Exception as e:
+        print(e)
 
 def main():
     
@@ -294,6 +349,8 @@ def main():
             print(response.json()["datetime"])
             
             power = 0
+            voltage_reading = 0
+            current_reading = 0
             
             try:
                 measured_voltage = sensor_ina219.getBusVoltage_V()  # Bus Voltage in volts
@@ -301,6 +358,8 @@ def main():
                 real_current = current/1000
                 adjusted_voltage = actual_voltage(measured_voltage)  # Adjusted voltage in volts
                 power = (adjusted_voltage * real_current)/1000 # power in wats
+                voltage_reading = adjusted_voltage
+                current_reading = real_current
                 print(f"Adjusted Voltage: {adjusted_voltage:.2f} V, Current: {real_current:.2f} mA")
                 
             except Exception as e:
@@ -342,7 +401,28 @@ def main():
             pushOneDay({"date": date}, {"power": power})
             pushOneDay({"date": date}, {"times": response.json()["datetime"][0:-4] + '0:00'})
             
-            #print("Finished updating")
+            if (current_reading < 0.1 or voltage_reading < 0.1):
+                insertAnomaly({"date": response.json()["datetime"][0:-4] + '0:00'},
+                              
+                              {"date": response.json()["datetime"][0:-4] + '0:00',
+                               "current": current_reading,
+                               "voltage": voltage_reading,
+                               }
+                              )
+            
+            
+            #Update current and voltage values
+            filter_dictionary = {"id": "65539e775435e37264e3e6ff"}
+            
+            update_dictionary = {"id": "65539e775435e37264e3e6ff",
+                                 "Voltage_reading": str(voltage_reading),
+                                 "location": "Warren Towers",
+                                 "solarPanels": [],
+                                 "Current_reading": str(current_reading)
+                                 }
+            updateCurrentAndVoltage(filter_dictionary, update_dictionary)
+
+            print("Finished updating")
             #updateOne(filterDict, updateDict)
             
             time.sleep(30)

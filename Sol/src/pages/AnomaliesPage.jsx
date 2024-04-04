@@ -53,7 +53,7 @@ export default function AnomaliesPage() {
   
             <ul class="topnav">
               <li><Link className="nav-link" to="../analytics" state={{id:email}}>Analytics</Link></li>
-              <li><Link className="nav-link" to="../control-center" state={{id:email}}>Control Center</Link></li>
+              {/* <li><Link className="nav-link" to="../control-center" state={{id:email}}>Control Center</Link></li> */}
               <li><Link className="nav-link" to="../anomalies" state={{id:email}}>Anomalies</Link></li>
             </ul>
           </nav>
