@@ -7,6 +7,13 @@ import network
 import urequests as requests
 import time
 import machine
+
+import umail
+
+# Internal libs
+#import constants
+
+
 #from bh1750 import BH1750
 
 # Initialize I2C for INA219 and BH1750
@@ -303,6 +310,35 @@ def updateCurrentAndVoltage(filter_dict, update_dict):
         response.close()
     except Exception as e:
         print(e)
+        print(e)
+        
+def updateCurrentAndVoltage(filter_dict, update_dict):
+    try:
+        headers = {
+            "api-key": "fuQa5n8PAJ38cvm0m1kAjfCuI3slNoBpPHYud7uTR2RsIeY75F8RcGGSAUGjPWXB",
+            #"Connection": "upgrade",
+            #"Upgrade": "HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11"
+        }
+        update = {"$set": update_dict}
+        searchPayload = {
+            "dataSource": "Sol-Cluster",
+            "database": "Sol",
+            "collection": "solararrays",
+            "filter": filter_dict,
+            "update": update_dict,
+            "upsert": True,
+        }
+        response = requests.post(url + "updateOne", headers=headers, json=searchPayload)
+        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
+        if response.status_code >= 200 and response.status_code < 300:
+            print("Success Response")
+            
+        else:
+            print(response.status_code)
+            print("Error")
+        response.close()
+    except Exception as e:
+        print(e)
         
 def insertAnomaly(filter_dict, update_dict):
     try:
@@ -331,6 +367,39 @@ def insertAnomaly(filter_dict, update_dict):
         response.close()
     except Exception as e:
         print(e)
+        
+def findSolarArrayEmailList(filter_dict):
+    try:
+        headers = {
+            "api-key": "fuQa5n8PAJ38cvm0m1kAjfCuI3slNoBpPHYud7uTR2RsIeY75F8RcGGSAUGjPWXB",
+            #"Connection": "upgrade",
+            #"Upgrade": "HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11"
+        }
+        searchPayload = {
+            "dataSource": "Sol-Cluster",
+            "database": "Sol",
+            "collection": "solararrays",
+            "filter": filter_dict,
+            #"update": update_dict,
+            #"upsert": True,
+        }
+        response = requests.post(url + "findOne", headers=headers, json=searchPayload)
+        print("Response: (" + str(response.status_code) + "), msg = " + str(response.text))
+        if response.status_code >= 200 and response.status_code < 300:
+            if response.text == "{\"document\":null}":
+                print("No Solar Array found")
+                return []
+            else:
+                print(response.json()["document"]["email_list"])
+                return response.json()["document"]["email_list"]
+               
+                
+        else:
+            print(response.status_code)
+            print("findOne Error")
+        response.close()
+    except Exception as e:
+        print(e)
 
 def main():
     
@@ -343,6 +412,7 @@ def main():
     
     while True:
         try:
+            
             response = requests.get(url='http://worldtimeapi.org/api/timezone/America/New_York')
             date=response.json()["datetime"][0:10].replace("-", "/")
             
@@ -401,7 +471,38 @@ def main():
             pushOneDay({"date": date}, {"power": power})
             pushOneDay({"date": date}, {"times": response.json()["datetime"][0:-4] + '0:00'})
             
+            email_list = findSolarArrayEmailList({"id": "65539e775435e37264e3e6ff"})
+            
             if (current_reading < 0.1 or voltage_reading < 0.1):
+                # Email details
+                sender_email = "angelosoyannwo@gmail.com"
+                sender_name = "Team 15 Solar Power Module"
+                sender_app_password = "xrju iocy danb cjkm"
+                email_subject ='Solar Power Module Anomaly'
+                
+                for i in range(len(email_list)):
+                    # Send the email
+                    # Connect to the Gmail's SSL port
+                    smtp = umail.SMTP('smtp.gmail.com', 465, ssl=True)
+                    # Login to the email account using the app password
+                    smtp.login(sender_email, sender_app_password)
+                    # Specify the recipient email address
+                    smtp.to(email_list[i])
+                    # Write the email header
+                    smtp.write("From:" + sender_name + "<"+ sender_email+">\n")
+                    smtp.write("Subject:" + email_subject + "\n")
+                    # Write the body of the email
+                    text = f"An anomaly has occurred in the operation of the solar plant.\nVoltage: {voltage_reading:.2f} V, Current: {current_reading:.2f} mA"
+                    smtp.write(text)
+                    # Send the email
+                    smtp.send()
+                    # Quit the email session
+                    smtp.quit()
+
+                    print('Email Sent')
+                
+                
+                
                 insertAnomaly({"date": response.json()["datetime"][0:-4] + '0:00'},
                               
                               {"date": response.json()["datetime"][0:-4] + '0:00',
@@ -409,6 +510,8 @@ def main():
                                "voltage": voltage_reading,
                                }
                               )
+                
+                
             
             
             #Update current and voltage values
@@ -418,12 +521,16 @@ def main():
                                  "Voltage_reading": str(voltage_reading),
                                  "location": "Warren Towers",
                                  "solarPanels": [],
-                                 "Current_reading": str(current_reading)
+                                 "Current_reading": str(current_reading),
+                                 "email_list": email_list,
                                  }
             updateCurrentAndVoltage(filter_dictionary, update_dictionary)
 
             print("Finished updating")
             #updateOne(filterDict, updateDict)
+            
+            
+            
             
             time.sleep(30)
                 

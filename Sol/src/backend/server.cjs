@@ -209,6 +209,13 @@ app.post('/addSolarArray', async(req, res) => {
                 { email: email},
                 { $push: { solarArrays: arrayId } }
              )
+
+            await SolarArray.updateOne(
+                { id: arrayId},
+                { $push: { email_list: email } }
+            )
+
+            
             res.json("exists");
         }
         else{

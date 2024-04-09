@@ -20,6 +20,7 @@ function ModalForm(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [id, setId] = useState('')
+    // const [refresh, setRefresh] = useState(false)
 
   async function addSolarArray(e) {
     e.preventDefault();
@@ -30,6 +31,7 @@ function ModalForm(props) {
             alert("Check array details")
           }
           else if(res.data==="exists"){
+            window.location.reload();
             alert('Solar Array Added')
           }
           else if (res.data==="solarArrayAlreadySelected"){

@@ -23,6 +23,7 @@ export default function AnalyticsPage() {
       var user = JSON.parse(userJsonString)
       setEmail(user.email)
       setUser(user)
+  
     }
 
     getUser();
@@ -84,8 +85,51 @@ export default function AnalyticsPage() {
         </div>
 
         </div> */}
-        <AnalyticsPanel title={welcomeMessage} setEmailAddress={setEmail} email={email}/>
+        { user !== null && user.solarArrays.length > 0 ?
+         <AnalyticsPanel title={welcomeMessage} setEmailAddress={setEmail} email={email}/>
+          :
+          <div className='pagebody'>
+          <div className="page_content">
+            
+            <div className="row">
+              <div className="col"></div>
 
+                  <div className="col-5"> 
+                    {/* <div className="card"> */}
+                      <div className="card-body">
+                        <h5 className="card-title">
+                        <div className="text-center">{welcomeMessage}</div>
+                        </h5>
+
+                      </div>
+                    {/* </div> */}
+                  </div>
+
+                  <div className="col"></div>
+            </div>
+
+            <div className="row">
+              <div className="col"></div>
+
+
+              <div className="col">
+
+                </div>
+
+              {/* <SolarArrayCard title = {'Solar Array '}/> */}
+
+              <div className="col">
+                <div className="text-center">
+              
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+        }
       </>
     );
 }
