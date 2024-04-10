@@ -10,6 +10,7 @@ const solarArraySchema = new mongoose.Schema({
     Current_reading: {type: String},
     currentPower: {type: String},
     solarPanels: [{type: mongoose.Schema.Types.ObjectId, ref:'SolarPanels'}],
+    email_list: [{type: String}]
 })
 
 const SolarArray = mongoose.model('SolarArray', solarArraySchema);

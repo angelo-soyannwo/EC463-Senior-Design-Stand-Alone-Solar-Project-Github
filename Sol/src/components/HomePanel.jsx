@@ -18,6 +18,7 @@ function HomePanel(props) {
   const email = props.email;
   const [user, setUser] = useState(null)
   const [solarArrays, setSolarArrayObjects] = useState({})
+  // const [refresh, setRefresh] = useState(false)
   
 
   useEffect(() => {
@@ -99,7 +100,7 @@ if (!solarArrays){
 
             <div className="col">
               <div className="text-center">
-                <ModalForm email = {email}/>
+                <ModalForm email = {email} />
 
                 <ModalFormCSAI />
               </div>
@@ -149,9 +150,12 @@ else{
 
               <div className="col">
                 <div className="text-center">
+                {/* the line below has a button which allows for the creation of a solar array in our database*/}
                   <ModalForm email = {email}/>
 
-                  <ModalFormCSAI />
+
+                  {/* the line below has a button which allows for the creation of a solar array in our database*/}
+                  {/* <ModalFormCSAI /> */}
                 </div>
               </div>
 

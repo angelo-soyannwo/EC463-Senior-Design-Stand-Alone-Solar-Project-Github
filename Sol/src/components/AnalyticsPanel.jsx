@@ -18,6 +18,9 @@ import {MDBTable,
         MDBContainer, 
         MDBBtn,
         MDBBtnGroup,
+        MDBPagination,
+        MDBPaginationItem,
+        MDBPaginationLink,
       } from "mdb-react-ui-kit"
 
 
@@ -29,6 +32,8 @@ function AnalyticsPanel(props) {
   const [times, setTimes] = useState(null);
   const [power, setPower] = useState(null);
   const [luminances, setLuminances] = useState(null);
+  const [luminanceList, setLuminanceList] = useState(null);
+  const [temperatures, setTemperatures] = useState(null)
   const [luminaceTimes, setLuminanceTimes] = useState(null);
   const [loading, setLoading] = useState(null)
   const [loading2, setLoading2] = useState(null)
@@ -40,6 +45,9 @@ function AnalyticsPanel(props) {
   const [tempF, setTempF] = useState("");
   const [selectedDay, setSelectedDay] = useState(null)
   const [searchQuery, setSearchQuery] = useState('');
+  const [start, setStart] = useState(0);
+  const [end, setEnd] = useState(5);
+  const [page, setPage] = useState(1);
 
   const sdk = new ChartsEmbedSDK({
     baseUrl: "https://charts.mongodb.com/charts-embedding-examples-wgffp", // ~REPLACE~ with the Base URL from your Embed Chart dialog.
@@ -75,10 +83,13 @@ function AnalyticsPanel(props) {
       
     // })
     axios.get('http://localhost:8000/luminanceTempGraphData').then(result => {
-      console.log(result.data[0])
+      console.log(result.data)
       try{
-        setLuminanceTimes(result.data[0].times.map(item => item.slice(11, 22)))
-        setLuminances(result.data[0].luminances.map(item => item.$numberDecimal))
+        setLuminanceTimes(result.data[result.data.length-1].times.map(item => item.slice(11, 22)))
+        setLuminances(result.data[result.data.length-1].luminances.map(item => item.$numberDecimal))
+        setTemperatures(result.data[result.data.length-1].temperature_farenheit.map(item => item.$numberDecimal))
+        setLuminanceList(result.data)
+        // console.log(result)
       }
       catch(err){
         console.log(err)
@@ -135,20 +146,40 @@ function AnalyticsPanel(props) {
     setTimes(x.times.map(item => item.slice(11, 22)));
   }
 
-  function findDay(array, date){
+  function findDay(array, date, luminanceArray){
 
     // var formattedDate = date.slice(7,10) + '-' + date.slice(4,5) + '-' + date.slice(0,1)
     console.log(date)
+    var flag = false
+    var fla
     for(var i=0; i<array.length; i++){
       if (array[i].date.slice(0, 10) === date){
+
         setSelectedDay(array[i].date.slice(0, 10))
         setPower(array[i].power.map(item => item.$numberDecimal)); 
         setTimes(array[i].times.map(item => item.slice(11, 22)));
+        flag = true
       }
     }
+    for(var i=0; i<luminanceArray.length; i++){
+       if (luminanceArray[i].day.slice(0, 10) === date){
+    //     setSelectedDay(luminanceArray[i].date.slice(0, 10))
+         setLuminances(luminanceArray[i].luminances.map(item => item.$numberDecimal));
+         if(luminanceArray[i].temperature_farenheit.length === 0) {
+          setTemperatures(null)
+          console.log('00000')
+         }
+         else {
+          setTemperatures(luminanceArray[i].temperature_farenheit.map(item => item.$numberDecimal))
+         }
+         
+    //     setTimes(array[i].times.map(item => item.slice(11, 22)));
+    }
+    }
+    
   }
 
-  function arrayList(array){
+  function arrayList(array, start){
     if (!array || array === undefined){
       return null
     }
@@ -158,8 +189,8 @@ function AnalyticsPanel(props) {
       
       return(
         <MDBTableBody key={index}>
-          <tr onClick={() => {setDisplayData(item); setSelectedDay(item.date.slice(0, 10))}}>
-            <th scope="row">{index+1}</th>
+          <tr onClick={() => {setDisplayData(item); setSelectedDay(item.date.slice(0, 10)), findDay(days, item.date.slice(0, 10), luminanceList)}}>
+            <th scope="row">{start+index+1}</th>
             <td className='tableRow'>
               {/* {item} */}
               {item.date.slice(0, 10)}
@@ -174,7 +205,8 @@ function AnalyticsPanel(props) {
 
   function handleSearch(){
     console.log(searchQuery)
-    findDay(days, searchQuery)
+    console.log(luminanceList)
+    findDay(days, searchQuery, luminanceList)
     // props.setEmailAddress(props.email)
   }
 
@@ -224,10 +256,16 @@ function AnalyticsPanel(props) {
                                       },
 
                                       {
-                                        label: 'luminance',
+                                        label: 'solar irradiation',
                                         data: luminances,
                                         backgroundColor: "yellow",
                                         borderColor: "yellow",
+                                      },
+                                      {
+                                        label: 'temperature farenheit',
+                                        data: temperatures,
+                                        backgroundColor: "red",
+                                        borderColor: "red",
                                       },
                                     ]
                                   }}
@@ -302,16 +340,52 @@ function AnalyticsPanel(props) {
                           </MDBTable>)
                           
                           : 
+
+
+                            arrayList(days.slice(start, end), start)
+
                           
-                          arrayList(days)
-
-
-
                           }
 
                           </MDBCol>
                         </MDBRow>
                       {/* </div> */}
+
+                          <div style={{display: 'flex', justifyContent:'center'}}>
+                            {page}
+                          </div>
+                      
+
+                      <div style={{
+                        display: 'flex'
+                      }}
+                      >
+
+                      
+
+                        {days.length > end ? 
+                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start+5); setEnd(end+5); setPage(page+1)}}>next</button> 
+                          
+                          : 
+                          
+                          null
+                          
+                        }
+                        
+                        {start > 0 ? 
+
+                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start-5); setEnd(end-5); setPage(page-1)}}>back</button> 
+                          
+                          : 
+
+                          null
+                        }
+                        
+
+                      </div>
+
+                      
+
                     </MDBContainer>
                     }
 
@@ -327,7 +401,7 @@ function AnalyticsPanel(props) {
                       </h6>
                       <div>
                       <p>
-                      Luminance: {lux} Lux<br/>
+                      Solar Irradiation: {lux} W/m^2<br/>
                       Temperature:  <br/> {tempC} °C | {tempF} °F
                       </p> 
                       
