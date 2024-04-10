@@ -5,7 +5,6 @@ import sys
 import utime as time
 import usocket as socket
 import ustruct as struct
-import uasyncio
 
 led = Pin("LED", Pin.OUT)
 led.low()
@@ -20,7 +19,7 @@ GMT_OFFSET = 3600 * 4 # 3600 = 1 h (wintertime)
 NTP_HOST = 'pool.ntp.org'
 
 # Retrieve time from NTP Server
-async def getTimeNTP():
+def getTimeNTP():
     NTP_DELTA = 2208988800
     NTP_QUERY = bytearray(48)
     NTP_QUERY[0] = 0x1B
@@ -33,21 +32,21 @@ async def getTimeNTP():
     except:
         for x in range(4):
             led.high()
-            await uasyncio.sleep(0.1)
+            time.sleep(0.1)
             led.low()
-            await uasyncio.sleep(0.1)        
+            time.sleep(0.1)        
     finally:
         s.close()
     ntp_time = struct.unpack("!I", msg[40:44])[0]
     return time.gmtime(ntp_time - NTP_DELTA - GMT_OFFSET)
 
 # Copy time to PI pico´s RTC
-async def setTimeRTC(rtc):
-    tm = await getTimeNTP()
+def setTimeRTC(rtc):
+    tm = getTimeNTP()
     rtc.datetime((tm[0], tm[1], tm[2], 0, tm[3], tm[4], tm[5], 0))     #weekday cannot be set
     print(time.localtime())      # display current datetime
 
-async def connectWIFI():  
+def connectWIFI():  
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(ssid, password)
@@ -59,14 +58,14 @@ async def connectWIFI():
         if wlan.status() < 0 or wlan.status() >= 3:
             break
         max_wait -= 1    
-        await uasyncio.sleep(1)
+        time.sleep(1)
     status = None
     if wlan.status() != 3:
         for x in range(2):
             led.high()
-            await uasyncio.sleep(0.2)
+            time.sleep(0.2)
             led.low()
-            await uasyncio.sleep(0.2) 
+            time.sleep(0.2) 
         raise RuntimeError('Connections failed')
         
     else:
@@ -74,7 +73,7 @@ async def connectWIFI():
         print('connection to', ssid,'succesfull established!', sep=' ')
         print('IP-adress: ' + status[0])
     ipAddress = status[0]
-    await uasyncio.sleep(0.01)
+    time.sleep(0.01)
     #except:
         
 
@@ -88,3 +87,4 @@ if __name__ == "__main__":
     print(time.localtime())                  #yr,mnth,dy,hr,min,sec,wkdy,yrdy --- Still based on RTC
     #print(time.mktime(rtc.datetime()))       #Don't use rtc.datetime to convert to epoch seconds
     print(time.mktime(time.localtime()))     #Must use localtime, NOT datetime (order is different)
+

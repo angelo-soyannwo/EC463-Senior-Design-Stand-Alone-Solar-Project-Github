@@ -481,7 +481,7 @@ async def menu(q, dayStart, dayEnd, top_pauseTime, timeFactor):
                     lcd.move_to(x_pos, y_pos)
                     lcd.putchar(chr(0))
                     lcd.move_to(x_pos, y_pos)
-            await uasyncio.sleep(0.04)
+            await uasyncio.sleep(0.1)
         settingChanged = 1
         if pstn==0:
             await RTC_manual()
@@ -496,7 +496,7 @@ async def menu(q, dayStart, dayEnd, top_pauseTime, timeFactor):
             timeFactor = await set_timeFactor(timeFactor)
             await q.put([3, timeFactor])
         
-        await uasyncio.sleep(0.04)
+        await uasyncio.sleep(0.1)
         #return settingChanged, dayStart, dayEnd, top_pauseTime, timeFactor
                 
 if __name__ == "__main__":
