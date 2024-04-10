@@ -44,20 +44,20 @@ stepDelay = (30)/(rpm*SPR) #seconds, 7.5 ms/step, delay=3.75ms
 # botLim.irq(triggermachine.Pin.IRQ_RISING, handler=lim_handler(1))
 # topLim.irq(triggermachine.Pin.IRQ_RISING, handler=lim_handler(2))
 
-def rotateMotor(direction, stepDelay, steps, currSteps):
+def rotateMotor(direction, stepDelay, steps):
     for x in range(steps):
         #if switch hit and interrupt, stop motor movement
         if limSwitch.swHit==1 and direction==down:
             break
-        if limSwitch.swHit==2 and direction==up:
+        elif limSwitch.swHit==2 and direction==up:
             break
-        if limSwitch.swHit==1 and direction==up:
-            swHit = 0
-        if limSwitch.swHit==2 and direction==down:
-            swHit = 0
+        elif limSwitch.swHit==1 and direction==up:
+            limSwitch.swHit = 0
+        elif limSwitch.swHit==2 and direction==down:
+            limSwitch.swHit = 0
             
-        if not ((currSteps<=0 and direction==down) or (currSteps>=total_steps and direction==up)):
-            print(currSteps)
+        if not ((limSwitch.currSteps<=0 and direction==down) or (limSwitch.currSteps>=total_steps and direction==up)):
+            print(limSwitch.currSteps)
             DIR.value(direction)
             STEP.high()
             time.sleep(stepDelay)
@@ -65,51 +65,48 @@ def rotateMotor(direction, stepDelay, steps, currSteps):
             time.sleep(stepDelay)
         
             if direction == CW:
-                currSteps += 1
+                limSwitch.currSteps += 1
             else:
-                currSteps -= 1       
-    return currSteps
+                limSwitch.currSteps -= 1       
 
-async def rotateMotor_manual(q, currSteps):
+async def rotateMotor_manual():
 #     global limSwitch.swHit
     while OK.value()==1:
         pass
     while OK.value()==0:
         if limSwitch.swHit==0:
             if UP.value():
-                currSteps = rotateMotor(up, stepDelay, 1, currSteps)
+                rotateMotor(up, stepDelay, 1)
             elif DOWN.value():
-                currSteps = rotateMotor(down, stepDelay, 1, currSteps)
+                rotateMotor(down, stepDelay, 1)
         elif limSwitch.swHit==1:
             if UP.value():
-                currSteps = rotateMotor(up, stepDelay, 1, currSteps)
+                rotateMotor(up, stepDelay, 1)
                 limSwitch.swHit = 0
         elif limSwitch.swHit==2:
             if DOWN.value():
-                currSteps = rotateMotor(down, stepDelay, 1, currSteps)
+                rotateMotor(down, stepDelay, 1)
                 limSwitch.swHit = 0
     
-    await q.put(currSteps)
             
-async def waitManual(q):
+async def waitManual():
     while True:
         print("waiting")
+        print(limSwitch.currSteps)
         while OK.value()==1:
             pass
         while OK.value()==0:
-            await uasyncio.sleep(0.1)
+            await uasyncio.sleep(0.001)
         EN.low()
         print("manual")   
-        currSteps = await q.get()
-        await rotateMotor_manual(q, currSteps)
+        await rotateMotor_manual()
         EN.high()
     
         
 async def main():
-    q = queue.Queue()
-    currSteps = 0
-    await q.put(currSteps)
-    await waitManual(q)
+    #q = queue.Queue()
+    limSwitch.currSteps = 2000
+    await waitManual()
         
 if __name__ == "__main__":
     uasyncio.run(main())

@@ -1,5 +1,5 @@
 import time
-from machine import Pin, RTC
+from machine import Pin, RTC, I2C
 from math import fabs, floor
 import uasyncio
 import queue
@@ -34,7 +34,7 @@ led.low()
 
 total_rotations = 20
 total_steps = SPR*total_rotations    #200*20 = 4000
-rpm = 40
+rpm = 60
 stepDelay = (30)/(rpm*SPR) #milliseconds, 7.5 ms/step, delay=3.75ms
 rest = 300 #How long to rest between each findLight
 

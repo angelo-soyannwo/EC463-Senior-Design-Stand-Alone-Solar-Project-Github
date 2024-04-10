@@ -38,8 +38,8 @@ led.low()
 
 total_rotations = 20
 total_steps = SPR*total_rotations    #200*20 = 4000
-rpm = 40
-stepDelay = (30)/(rpm*SPR) #milliseconds, 7.5 ms/step, delay=3.75ms
+rpm = 60
+stepDelay = (30)/(rpm*SPR) #milliseconds, 5 ms/step, delay=2.5ms
 rest = 10 #How long to rest between each findLight
 
 # def lim_handler(sw):
@@ -50,7 +50,7 @@ rest = 10 #How long to rest between each findLight
 # botLim.irq(triggermachine.Pin.IRQ_RISING, handler=lim_handler(1))
 # topLim.irq(triggermachine.Pin.IRQ_RISING, handler=lim_handler(2))
 
-async def asyncRotateMotor(q, direction, delay, steps, currSteps):
+async def asyncRotateMotor(direction, delay, steps):
     for x in range(steps):
         #if switch hit and interrupt, stop motor movement
         if limSwitch.swHit==1 and direction==down:
@@ -62,25 +62,21 @@ async def asyncRotateMotor(q, direction, delay, steps, currSteps):
         elif limSwitch.swHit==2 and direction==down:
             limSwitch.swHit = 0
             
-        if not ((currSteps<=0 and direction==down) or (currSteps>=total_steps and direction==up)):
+        if not ((limSwitch.currSteps<=0 and direction==down) or (limSwitch.currSteps>=total_steps and direction==up)):
             DIR.value(direction)
             STEP.high()
-            await uasyncio.sleep(delay)
-            currSteps = await q.get()
-            await q.put(currSteps)
+            await uasyncio.sleep(delay/4)
+            #time.sleep(delay)
             STEP.low()
-            await uasyncio.sleep(delay)
-            currSteps = await q.get()
-            await q.put(currSteps)
+            await uasyncio.sleep(delay/4)
+            #time.sleep(delay)
+            
             if direction == up:
-                currSteps += 1
+                limSwitch.currSteps += 1
             else:
-                currSteps -= 1
-            #clear queue and put new currSteps on queue
-            await q.get()
-            await q.put(currSteps)
-    
-    return currSteps
+                limSwitch.currSteps -= 1
+       
+    return limSwitch.currSteps
 
 
 #Lux noise threshold, move adjust reflectors if change in lux is greater than this
@@ -88,9 +84,7 @@ luxNzThrs = 10
 # #Need to check if CW corresponds to up, start findLight for the first time with this direction, reflectors at bottom
 # direction = up
 
-async def findLight(q, direction, stepDelay):
-    currSteps = await q.get()
-    await q.put(currSteps)
+async def findLight(direction, stepDelay):
     EN.low()
     #lux1 = light_sensor1.luminance(BH1750.CONT_HIRES_1)
 #     light_sensor2.set_mode(BH1750.CONT_HIRES_1)
@@ -101,10 +95,10 @@ async def findLight(q, direction, stepDelay):
     #direction = up      #Need to check if CW corresponds to up, start findLight routine when reflectors are at bottom
     baseSteps = 200    #Number of steps to rotate initially for finding light, decreases as direction changes, to hone in
     steps = baseSteps
-    print("currSteps: ", currSteps)
+    print("currSteps: ", limSwitch.currSteps)
     print("direction: ", direction)
-    currSteps = await asyncRotateMotor(q, direction, stepDelay, steps, currSteps)
-    print("currSteps: ", currSteps)
+    await asyncRotateMotor(direction, stepDelay, steps)
+    print("currSteps: ", limSwitch.currSteps)
     #lux1 = light_sensor1.luminance(BH1750.CONT_HIRES_1)
     lux2 = light_sensor2.luminance(BH1750.CONT_HIRES_1)
     #lux = (lux1+lux2)/2
@@ -114,20 +108,18 @@ async def findLight(q, direction, stepDelay):
         #Motor active
         EN.low()
         #"Borrow" from the queue in case interrupted
-        currSteps = await q.get()
-        await q.put(currSteps)
         
         if limSwitch.swHit==0:
             #optimal spot not found yet
             if lux - prevLux > fabs(luxNzThrs):
                 if lux > prevLux:
                     #Continue in the direction that reflectors were already moving
-                    await asyncRotateMotor(q, direction, stepDelay, steps, currSteps)
+                    await asyncRotateMotor(direction, stepDelay, steps)
                 else:
                     #Reverse reflector direction and reduce amount reflectors move
                     direction = ~direction
                     steps = floor(0.75*steps)
-                    await asyncRotateMotor(q, direction, stepDelay, steps, currSteps)
+                    await asyncRotateMotor(direction, stepDelay, steps)
             #optimal spot found
             else:
                 #reset rotation amount to full amount for the next time reflectors need to find light
@@ -141,7 +133,7 @@ async def findLight(q, direction, stepDelay):
             #optimal spot not found yet, go reverse direction, no longer at limit
             if lux - prevLux > fabs(luxNzThrs):
                 if lux < prevLux:
-                    await asyncRotateMotor(q, direction, stepDelay, steps, currSteps)
+                    await asyncRotateMotor(direction, stepDelay, steps)
                     limSwitch.swHit = 0
             else:
                 #stay at limit, begin going away from limit at next check
@@ -158,43 +150,35 @@ async def findLight(q, direction, stepDelay):
     return direction
             
             
-async def posRst(q):
+async def posRst():
     while limSwitch.swHit==0:
-        await asyncRotateMotor(q, down, stepDelay, 200, 2*total_steps)
-    currSteps = 0
+        limSwitch.currSteps = 2*total_steps
+        await asyncRotateMotor(down, stepDelay, 200)
+    limSwitch.currSteps = 0
     
-    await q.get()
-    await q.put(currSteps)
-    return currSteps
 
 async def main():
     
     # Queue for passing messages, initialize with currSteps = 0
-    q = queue.Queue()
-    currSteps = 0
-    await q.put(currSteps)
+    #q = queue.Queue()
+    limSwitch.currSteps = 0
     
-    currSteps = await posRst(q)  #currSteps should be 0 here
+    await posRst()  #currSteps should be 0 here
     direction = up
     
     
     #coroutine for checking for manual motor control mode
-    uasyncio.create_task(manualMotor.waitManual(q))
+    uasyncio.create_task(manualMotor.waitManual())
     
-    currSteps = await q.get()
-    await q.put(currSteps)
-    print("currSteps: ", currSteps)
+    print("currSteps: ", limSwitch.currSteps)
     while True:
         print("Finding light")
-        direction = await findLight(q, direction, stepDelay)
+        direction = await findLight(direction, stepDelay)
         
         #Motor sleep
         EN.high()
         
-        #Borrow from q to check currSteps
-        currSteps = await q.get()
-        await q.put(currSteps)
-        print("Found light. CurrSteps: ", currSteps)
+        print("Found light. CurrSteps: ", limSwitch.currSteps)
         await uasyncio.sleep(rest)
         
         
