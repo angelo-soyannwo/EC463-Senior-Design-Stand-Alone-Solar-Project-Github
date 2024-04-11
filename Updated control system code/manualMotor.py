@@ -1,7 +1,7 @@
 from machine import Pin
 import time
-import uasyncio
-import queue
+# import uasyncio
+# import queue
 import limSwitch
 import globalVars
 
@@ -28,10 +28,6 @@ EN.low()
 DIR.value(CW)
 led.low()
 
-# botLim = Pin(14, Pin.IN)
-# topLim = Pin(15, Pin.IN)
-# swHit = 0     #1 for bottom hit, 2 for top hit
-
 total_rotations = 20
 total_steps = SPR*total_rotations    #200*20 = 4000
 rpm = 60
@@ -39,10 +35,8 @@ stepDelay = (30)/(rpm*SPR) #seconds, 7.5 ms/step, delay=3.75ms
 
 
 def man_handler(pin):
-    print("Manual mode")
     globalVars.manualMode = 1
     
-
 OK.irq(trigger=Pin.IRQ_RISING, handler=man_handler)
 
 def rotateMotor(direction, stepDelay, steps):
@@ -53,8 +47,10 @@ def rotateMotor(direction, stepDelay, steps):
         elif globalVars.swHit==2 and direction==up:
             break
         elif globalVars.swHit==1 and direction==up:
+            EN.low()
             globalVars.swHit = 0
         elif globalVars.swHit==2 and direction==down:
+            EN.low()
             globalVars.swHit = 0
             
         if not ((globalVars.currSteps<=0 and direction==down) or (globalVars.currSteps>=total_steps and direction==up)):
@@ -70,8 +66,8 @@ def rotateMotor(direction, stepDelay, steps):
             else:
                 globalVars.currSteps -= 1       
 
-async def rotateMotor_manual():
-    
+def rotateMotor_manual():
+    print("Manual mode")
     while OK.value()==1:
         pass
     
@@ -91,6 +87,7 @@ async def rotateMotor_manual():
                 rotateMotor(down, stepDelay, 1)
                 globalVars.swHit = 0
     EN.high()
+    print("Auto mode")
     globalVars.manualMode = 0
     
             
@@ -108,10 +105,11 @@ async def rotateMotor_manual():
 #         EN.high()
 #     
         
-async def main():
+def main():
     #q = queue.Queue()
     globalVars.currSteps = 2000
+    rotateMotor_manual()
 #     await waitManual()
         
 if __name__ == "__main__":
-    uasyncio.run(main())
+    main()

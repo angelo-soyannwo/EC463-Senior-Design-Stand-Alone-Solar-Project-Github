@@ -2,6 +2,8 @@ from machine import Pin
 from time import sleep
 import globalVars
 
+EN = Pin(11, Pin.OUT)
+
 botLim = Pin(14, Pin.IN, Pin.PULL_UP)
 topLim = Pin(15, Pin.IN, Pin.PULL_UP)
 # swHit = 0     #1 for bottom hit, 2 for top hit
@@ -13,6 +15,7 @@ led.on()
 def lim_handler(pin):
 #     global swHit
 #     global currSteps
+
     #disable motor
     EN.high()
     if pin==botLim:
