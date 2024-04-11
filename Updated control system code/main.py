@@ -1,13 +1,14 @@
 import time
 from machine import Pin, RTC, I2C
 from math import fabs, floor
-import uasyncio
-import queue
+# import uasyncio
+# import queue
 # from lux_sensor_main import i2c2, light_sensor2
 # import lux_sensor_main
 from bh1750 import BH1750
 import limSwitch
 import manualMotor
+import globalVars
 
 # Initialize light sensors
 # i2c1 = I2C(0, scl=Pin(21), sda=Pin(20))
@@ -16,7 +17,7 @@ i2c2 = I2C(1, scl=Pin(19), sda=Pin(18))
 # light_sensor1 = BH1750(i2c1)
 light_sensor2 = BH1750(i2c2)
 
-limSwitch.swHit = 0
+globalVars.swHit = 0
 # botLim = Pin(14, Pin.IN)
 # topLim = Pin(15, Pin.IN)
 # swHit = 0     #1 for bottom hit, 2 for top hit
@@ -52,31 +53,37 @@ rest = 10 #How long to rest between each findLight
 
 async def asyncRotateMotor(direction, delay, steps):
     for x in range(steps):
+        #check manual mode flag
+        if globalVars.manualMode:
+            manualMotor.rotateMotor_manual()
+            MM = 1
+            break
+        
         #if switch hit and interrupt, stop motor movement
-        if limSwitch.swHit==1 and direction==down:
+        if globalVars.swHit==1 and direction==down:
             break
-        elif limSwitch.swHit==2 and direction==up:
+        elif globalVars.swHit==2 and direction==up:
             break
-        elif limSwitch.swHit==1 and direction==up:
-            limSwitch.swHit = 0
-        elif limSwitch.swHit==2 and direction==down:
-            limSwitch.swHit = 0
+        elif globalVars.swHit==1 and direction==up:
+            globalVars.swHit = 0
+        elif globalVars.swHit==2 and direction==down:
+            globalVars.swHit = 0
             
-        if not ((limSwitch.currSteps<=0 and direction==down) or (limSwitch.currSteps>=total_steps and direction==up)):
+        if not ((globalVars.currSteps<=0 and direction==down) or (globalVars.currSteps>=total_steps and direction==up)):
             DIR.value(direction)
             STEP.high()
-            await uasyncio.sleep(delay/4)
+            time.sleep(delay/4)
             #time.sleep(delay)
             STEP.low()
-            await uasyncio.sleep(delay/4)
+            time.sleep(delay/4)
             #time.sleep(delay)
             
             if direction == up:
-                limSwitch.currSteps += 1
+                globalVars.currSteps += 1
             else:
-                limSwitch.currSteps -= 1
+                globalVars.currSteps -= 1
        
-    return limSwitch.currSteps
+    return MM
 
 
 #Lux noise threshold, move adjust reflectors if change in lux is greater than this
@@ -85,6 +92,10 @@ luxNzThrs = 10
 # direction = up
 
 async def findLight(direction, stepDelay):
+    #check manual mode flag
+        if globalVars.manualMode:
+            manualMotor.rotateMotor_manual()
+            break
     EN.low()
     #lux1 = light_sensor1.luminance(BH1750.CONT_HIRES_1)
 #     light_sensor2.set_mode(BH1750.CONT_HIRES_1)
@@ -95,31 +106,41 @@ async def findLight(direction, stepDelay):
     #direction = up      #Need to check if CW corresponds to up, start findLight routine when reflectors are at bottom
     baseSteps = 200    #Number of steps to rotate initially for finding light, decreases as direction changes, to hone in
     steps = baseSteps
-    print("currSteps: ", limSwitch.currSteps)
+    print("currSteps: ", globalVars.currSteps)
     print("direction: ", direction)
-    await asyncRotateMotor(direction, stepDelay, steps)
-    print("currSteps: ", limSwitch.currSteps)
+    MM = asyncRotateMotor(direction, stepDelay, steps)
+    if MM:
+        return direction
+    print("currSteps: ", globalVars.currSteps)
     #lux1 = light_sensor1.luminance(BH1750.CONT_HIRES_1)
     lux2 = light_sensor2.luminance(BH1750.CONT_HIRES_1)
     #lux = (lux1+lux2)/2
     lux = lux2
     
     while True:
+        #check manual mode flag
+        if globalVars.manualMode:
+            manualMotor.rotateMotor_manual()
+            break
         #Motor active
         EN.low()
         #"Borrow" from the queue in case interrupted
         
-        if limSwitch.swHit==0:
+        if globalVars.swHit==0:
             #optimal spot not found yet
             if lux - prevLux > fabs(luxNzThrs):
                 if lux > prevLux:
                     #Continue in the direction that reflectors were already moving
-                    await asyncRotateMotor(direction, stepDelay, steps)
+                    MM = asyncRotateMotor(direction, stepDelay, steps)
+                    if MM:
+                        break
                 else:
                     #Reverse reflector direction and reduce amount reflectors move
                     direction = ~direction
                     steps = floor(0.75*steps)
-                    await asyncRotateMotor(direction, stepDelay, steps)
+                    MM = asyncRotateMotor(direction, stepDelay, steps)
+                    if MM:
+                        break
             #optimal spot found
             else:
                 #reset rotation amount to full amount for the next time reflectors need to find light
@@ -133,8 +154,10 @@ async def findLight(direction, stepDelay):
             #optimal spot not found yet, go reverse direction, no longer at limit
             if lux - prevLux > fabs(luxNzThrs):
                 if lux < prevLux:
-                    await asyncRotateMotor(direction, stepDelay, steps)
-                    limSwitch.swHit = 0
+                    MM = asyncRotateMotor(direction, stepDelay, steps)
+                    globalVars.swHit = 0
+                    if MM:
+                        break
             else:
                 #stay at limit, begin going away from limit at next check
                 break
@@ -151,39 +174,53 @@ async def findLight(direction, stepDelay):
             
             
 async def posRst():
-    while limSwitch.swHit==0:
-        limSwitch.currSteps = 2*total_steps
-        await asyncRotateMotor(down, stepDelay, 200)
-    limSwitch.currSteps = 0
+    while globalVars.swHit==0:
+        #check manual mode flag
+        if globalVars.manualMode:
+            manualMotor.rotateMotor_manual()
+        
+        globalVars.currSteps = 2*total_steps
+        asyncRotateMotor(down, stepDelay, 200)
+
+    globalVars.currSteps = 0
     
 
 async def main():
     
     # Queue for passing messages, initialize with currSteps = 0
     #q = queue.Queue()
-    limSwitch.currSteps = 0
+    globalVars.currSteps = 0
     
-    await posRst()  #currSteps should be 0 here
+    posRst()  #currSteps should be 0 here
     direction = up
     
     
     #coroutine for checking for manual motor control mode
-    uasyncio.create_task(manualMotor.waitManual())
+    #uasyncio.create_task(manualMotor.waitManual())
     
-    print("currSteps: ", limSwitch.currSteps)
+    print("currSteps: ", globalVars.currSteps)
     while True:
         print("Finding light")
-        direction = await findLight(direction, stepDelay)
+        
+        direction = findLight(direction, stepDelay)
         
         #Motor sleep
         EN.high()
         
-        print("Found light. CurrSteps: ", limSwitch.currSteps)
-        await uasyncio.sleep(rest)
+        print("Found light. CurrSteps: ", globalVars.currSteps)
+        
+        for x in range(rest/0.005):
+            #check manual mode flag
+            if globalVars.manualMode:
+                manualMotor.rotateMotor_manual()
+            time.sleep(0.005)    
+            
+        #await uasyncio.sleep(rest)
         
         
 if __name__ == "__main__":
-    uasyncio.run(main())
+    #uasyncio.run(main())
+    main()
 #     direction = up
 #     currSteps = 0
 #     while True:
