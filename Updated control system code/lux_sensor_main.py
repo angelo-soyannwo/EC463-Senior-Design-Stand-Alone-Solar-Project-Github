@@ -184,17 +184,6 @@ def pushOne(filter_dict, update_dict):
         print(e)
 
 def main():
-
-# Moved initialization to top
-#     # Initialize I2C bus for Raspberry Pi Pico
-#     i2c = I2C(0, scl=Pin(21), sda=Pin(20))
-# 
-#     # Create an instance of the BH1750 class
-#     light_sensor = BH1750(i2c)
-    
-    connect_to_wifi("BU Guest (unencrypted)", "")
-    
-    while True:
         try:
             response = requests.get(url='http://worldtimeapi.org/api/timezone/America/New_York')
             date=response.json()["datetime"][0:10].replace("-", "/")
@@ -239,4 +228,6 @@ def main():
 
 #readPower(1000)
 if __name__ == "__main__":
-    main()
+    connect_to_wifi("BU Guest (unencrypted)", "")
+    while True:
+        main()

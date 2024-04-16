@@ -4,7 +4,7 @@ from math import fabs, floor
 # import uasyncio
 # import queue
 # from lux_sensor_main import i2c2, light_sensor2
-# import lux_sensor_main
+import lux_sensor_main
 from bh1750 import BH1750
 import limSwitch
 import manualMotor
@@ -176,6 +176,7 @@ def posRst():
     
 
 def main():
+    lux_sensor_main.connect_to_wifi("BU Guest (unencrypted)", "")
     
     # Queue for passing messages, initialize with currSteps = 0
     #q = queue.Queue()
@@ -189,8 +190,10 @@ def main():
     
     print("currSteps: ", globalVars.currSteps)
     while True:
-        print("Finding light")
+        #Sending light sensor data to database
+        lux_sensor_main.main()
         
+        print("Finding light")
         direction = findLight(direction, stepDelay)
         
         #Motor sleep

@@ -4,6 +4,8 @@ import globalVars
 
 EN = Pin(11, Pin.OUT)
 
+#C: GND
+#NO: Pin
 botLim = Pin(14, Pin.IN, Pin.PULL_UP)
 topLim = Pin(15, Pin.IN, Pin.PULL_UP)
 # swHit = 0     #1 for bottom hit, 2 for top hit
