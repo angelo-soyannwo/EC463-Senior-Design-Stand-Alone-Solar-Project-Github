@@ -6,15 +6,10 @@ import machine
 #from sensors import readVoltage, readCurrent
 
 from machine import I2C, Pin
-from bh1750 import BH1750  # Assuming the class you provided is saved in a file named bh1750.py
+#from bh1750 import BH1750  # Assuming the class you provided is saved in a file named bh1750.py
+import bh1750
 import utime
 
-# Initialize I2C bus for Raspberry Pi Pico
-i2c1 = I2C(0, scl=Pin(21), sda=Pin(20))
-i2c2 = I2C(1, scl=Pin(19), sda=Pin(18))
-# Create an instance of the BH1750 class
-light_sensor1 = BH1750(i2c1)
-light_sensor2 = BH1750(i2c2)
 
 def calculate_solar_irradiation(lux):
     # Convert lux to solar radiation in W/m^2
@@ -183,7 +178,7 @@ def pushOne(filter_dict, update_dict):
     except Exception as e:
         print(e)
 
-def main():
+def luxMain(lux1, lux2):
         try:
             response = requests.get(url='http://worldtimeapi.org/api/timezone/America/New_York')
             date=response.json()["datetime"][0:10].replace("-", "/")
@@ -191,9 +186,10 @@ def main():
             print(response.json()["datetime"])
             
             # Measure the ambient light in lux
-            lux1 = light_sensor1.luminance(BH1750.CONT_HIRES_1)
-            lux2 = light_sensor2.luminance(BH1750.CONT_HIRES_1)
+#             lux1 = light_sensor1.luminance(bh1750.BH1750.CONT_HIRES_1)
+#             lux2 = light_sensor2.luminance(bh1750.BH1750.CONT_HIRES_1)
             lux = (lux1+lux2)/2
+#             lux = lux1
             #print(f"Ambient light level: {lux} lux")
 
             # Calculate and print solar irradiation
@@ -221,13 +217,22 @@ def main():
             print("Finished updating")
             #updateOne(filterDict, updateDict)
             
-            time.sleep(30)
+#             time.sleep(30)
                 
         except Exception as e:
             print(e)
 
 #readPower(1000)
 if __name__ == "__main__":
+    # Initialize I2C bus for Raspberry Pi Pico
+    i2c1 = I2C(0, scl=Pin(21), sda=Pin(20))
+    i2c2 = I2C(1, scl=Pin(19), sda=Pin(18))
+    # Create an instance of the BH1750 class
+    light_sensor1 = bh1750.BH1750(i2c1)
+    light_sensor2 = bh1750.BH1750(i2c2)
+    
     connect_to_wifi("BU Guest (unencrypted)", "")
     while True:
-        main()
+        lux1 = light_sensor1.luminance(bh1750.BH1750.CONT_HIRES_1)
+        lux2 = light_sensor2.luminance(bh1750.BH1750.CONT_HIRES_1)
+        luxMain(lux1, lux2)

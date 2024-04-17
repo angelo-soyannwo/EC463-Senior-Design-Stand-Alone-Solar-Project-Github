@@ -6,8 +6,8 @@ EN = Pin(11, Pin.OUT)
 
 #C: GND
 #NO: Pin
-botLim = Pin(14, Pin.IN, Pin.PULL_UP)
-topLim = Pin(15, Pin.IN, Pin.PULL_UP)
+botLim = Pin(14, Pin.IN, Pin.PULL_DOWN)
+topLim = Pin(15, Pin.IN, Pin.PULL_DOWN)
 # swHit = 0     #1 for bottom hit, 2 for top hit
 # currSteps = 0
 
@@ -27,13 +27,13 @@ def lim_handler(pin):
     else:
         globalVars.swHit = 2
         print("top hit")
-    led.high()
+#     led.high()
     print("14: ", botLim.value())
     print("15: ", topLim.value())
     
 
-botLim.irq(trigger=Pin.IRQ_FALLING, handler=lim_handler)
-topLim.irq(trigger=Pin.IRQ_FALLING, handler=lim_handler)
+botLim.irq(trigger=Pin.IRQ_RISING, handler=lim_handler)
+topLim.irq(trigger=Pin.IRQ_RISING, handler=lim_handler)
 
 if __name__ == "__main__":
     led.low()
@@ -46,4 +46,4 @@ if __name__ == "__main__":
         print("botLim: ", botLim.value())
         print(globalVars.swHit)
         sleep(0.5)
-        led.low()
+#         led.low()

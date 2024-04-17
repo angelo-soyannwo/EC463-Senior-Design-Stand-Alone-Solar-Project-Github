@@ -1,5 +1,6 @@
 from machine import Pin
 import time
+from math import floor
 # import uasyncio
 # import queue
 import limSwitch
@@ -7,7 +8,7 @@ import globalVars
 
 up_pin = 2
 down_pin = 3
-select_pin = 0
+select_pin = 4
 
 UP = Pin(up_pin, Pin.IN, Pin.PULL_DOWN)
 DOWN = Pin(down_pin, Pin.IN, Pin.PULL_DOWN)
@@ -30,8 +31,9 @@ led.low()
 
 total_rotations = 20
 total_steps = SPR*total_rotations    #200*20 = 4000
-rpm = 60
-stepDelay = (30)/(rpm*SPR) #seconds, 7.5 ms/step, delay=3.75ms
+rpm = 100
+stepDelay = int(((30)/(rpm*SPR))*(10**6)) #microseconds, 7.5 ms/step, delay=3.75ms
+print(stepDelay)
 
 
 def man_handler(pin):
@@ -53,15 +55,15 @@ def rotateMotor(direction, stepDelay, steps):
             EN.low()
             globalVars.swHit = 0
             
-        if not ((globalVars.currSteps<=0 and direction==down) or (globalVars.currSteps>=total_steps and direction==up)):
-            print(globalVars.currSteps)
+        if not ((globalVars.swHit==1 and direction==down) or (globalVars.swHit==2 and direction==up)):
+#             print(globalVars.currSteps)
             DIR.value(direction)
             STEP.high()
-            time.sleep(stepDelay)
+            time.sleep_us(stepDelay)
             STEP.low()
-            time.sleep(stepDelay)
+            time.sleep_us(stepDelay)
         
-            if direction == CW:
+            if direction == up:
                 globalVars.currSteps += 1
             else:
                 globalVars.currSteps -= 1       
@@ -108,7 +110,8 @@ def rotateMotor_manual():
 def main():
     #q = queue.Queue()
     globalVars.currSteps = 2000
-    rotateMotor_manual()
+    while True:
+        rotateMotor_manual()
 #     await waitManual()
         
 if __name__ == "__main__":
