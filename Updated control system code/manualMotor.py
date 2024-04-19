@@ -17,8 +17,8 @@ OK = Pin(select_pin, Pin.IN, Pin.PULL_DOWN)
 CW = 0
 CCW = 1
 SPR = 200        #steps per revolution in full step mode
-up = CW
-down = CCW
+up = CCW
+down = CW
 
 led = Pin("LED", Pin.OUT)
 EN = Pin(11, Pin.OUT)

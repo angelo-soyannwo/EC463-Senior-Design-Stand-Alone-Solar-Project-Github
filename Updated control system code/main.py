@@ -23,8 +23,8 @@ globalVars.swHit = 0
 CW = 0
 CCW = 1
 SPR = 200        #steps per revolution in full step mode
-up = CW
-down = CCW
+up = CCW
+down = CW
 
 led = Pin("LED", Pin.OUT)
 EN = Pin(11, Pin.OUT)
@@ -145,9 +145,14 @@ def findLight(direction, stepDelay):
                 break
         
         #If reflectors at limits
-        else:
+        elif globalVars.swHit==1 or globalVars.swHit==2:
             #reverse direction
-            direction = ~direction
+            print("change dir")
+            if (globalVars.swHit==1):
+                direction = up
+            elif (globalVars.swHit==2):
+                direction = down
+            #direction = ~direction
             #optimal spot not found yet, go reverse direction, no longer at limit
             if fabs(lux - prevLux) > luxNzThrs:
                 if lux < prevLux:
@@ -186,8 +191,18 @@ def posRst():
     
 
 def main():
+    led.high()
+    time.sleep(2)
+    led.low()
+    
     connect_to_wifi("BU Guest (unencrypted)", "")
     
+    for x in range(3):
+            led.high()
+            time.sleep(0.5)
+            led.low()
+            time.sleep(0.5)
+            
     # Queue for passing messages, initialize with currSteps = 0
     #q = queue.Queue()
     globalVars.currSteps = 0
@@ -203,13 +218,15 @@ def main():
         #Sending light sensor data to database
         lux1 = light_sensor1.luminance(bh1750.BH1750.CONT_HIRES_1)
         lux2 = light_sensor2.luminance(bh1750.BH1750.CONT_HIRES_1)
+        led.high()
         luxMain(lux1, lux2)
+        led.low()
         
-        for x in range(4):
-            led.high()
-            time.sleep(0.2)
-            led.low()
-            time.sleep(0.2)
+#         for x in range(4):
+#             led.high()
+#             time.sleep(0.2)
+#             led.low()
+#             time.sleep(0.2)
         
         print("Finding light")
         direction = findLight(direction, stepDelay)
