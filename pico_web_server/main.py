@@ -1,3 +1,5 @@
+#This is the temperature_current_main.py module renamed main.py.
+
 # Import necessary libraries
 import machine, utime, onewire, ds18x20
 from ina219 import INA219
@@ -480,3 +482,4 @@ def main():
 #readPower(1000)
 if __name__ == "__main__":
     main()
+

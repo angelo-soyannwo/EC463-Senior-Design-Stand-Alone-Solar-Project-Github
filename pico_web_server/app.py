@@ -1,12 +1,13 @@
 import network
 import socket
 import time
+import demoInput
 
 from machine import Pin
 
 led = Pin(13, Pin.OUT)
 
-ssid = 'ssid = 'BU Guest (unencrypted)'
+ssid ='BU Guest (unencrypted)'
 password = ''
 
 wlan = network.WLAN(network.STA_IF)
@@ -45,10 +46,13 @@ s.listen(1)
 
 print('listening on', addr)
 
+data = userInput()
+
 # Listen for connections
 while True:
     try:
         cl, addr = s.accept()
+        print(s.getsockname())
         print('client connected from', addr)
         request = cl.recv(1024)
         print(request)
@@ -62,7 +66,7 @@ while True:
         if led_on == 6:
             print("led on")
             led.value(1)
-            stateis = "LED is ON"
+            stateis = "LED is ON" + data
 
         if led_off == 6:
             print("led off")
