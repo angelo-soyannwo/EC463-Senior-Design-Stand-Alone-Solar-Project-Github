@@ -33,7 +33,7 @@ RST = Pin(12, Pin.OUT)
 DIR = Pin(16, Pin.OUT)
 STEP = Pin(17, Pin.OUT)
 #initilialize motor
-EN.low()
+EN.high()
 SLP.high()
 RST.high()
 DIR.value(up)
@@ -85,7 +85,7 @@ def RotateMotor(direction, delay, steps):
 
 
 #Lux noise threshold, move adjust reflectors if change in lux is greater than this
-luxNzThrs = 20
+luxNzThrs = 30
 
 def findLight(direction, stepDelay):
     #check manual mode flag
@@ -176,7 +176,6 @@ def findLight(direction, stepDelay):
             
             
 def posRst():
-    EN.low()
     print("Initializing")
     
     while globalVars.swHit==0:
@@ -206,6 +205,7 @@ def main():
     # Queue for passing messages, initialize with currSteps = 0
     #q = queue.Queue()
     globalVars.currSteps = 0
+    EN.low()   #activate motors
     posRst()  #currSteps should be 0 here
     direction = up
     

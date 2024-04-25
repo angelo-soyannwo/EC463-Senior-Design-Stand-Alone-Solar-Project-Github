@@ -10,7 +10,9 @@ SPR = 200        #steps per revolution in full step mode
 led = Pin("LED", Pin.OUT)
 DIR = Pin(18, Pin.OUT)
 STEP = Pin(17, Pin.OUT)
+EN = Pin(15, Pin.OUT)
 #initilialize direction
+EN.high()
 DIR.value(CW)
 led.low()
 
@@ -38,6 +40,7 @@ def rotateMotor(steps, direction, delay, currSteps):
 print("here")
 #current = rotateMotor(total_steps,CW,delay,currSteps)
 #print(current)
+EN.low()
 for x in range(total_steps):
         STEP.high()
         time.sleep(delay)
