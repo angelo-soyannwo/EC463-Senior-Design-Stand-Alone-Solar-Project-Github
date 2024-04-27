@@ -1,3 +1,4 @@
+
 #Hardware Documentation
 ##Overview
 The hardware in SOL is segmented into two parts :
