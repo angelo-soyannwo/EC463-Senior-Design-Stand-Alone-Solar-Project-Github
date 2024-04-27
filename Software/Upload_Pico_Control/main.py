@@ -215,13 +215,6 @@ def main():
     
     print("currSteps: ", globalVars.currSteps)
     while True:
-        #Sending light sensor data to database
-        lux1 = light_sensor1.luminance(bh1750.BH1750.CONT_HIRES_1)
-        lux2 = light_sensor2.luminance(bh1750.BH1750.CONT_HIRES_1)
-        led.high()
-        luxMain(lux1, lux2)
-        led.low()
-        
 #         for x in range(4):
 #             led.high()
 #             time.sleep(0.2)
@@ -235,6 +228,13 @@ def main():
         EN.high()
         
         print("Found light. CurrSteps: ", globalVars.currSteps)
+        
+        #Sending light sensor data to database
+        lux1 = light_sensor1.luminance(bh1750.BH1750.CONT_HIRES_1)
+        lux2 = light_sensor2.luminance(bh1750.BH1750.CONT_HIRES_1)
+        led.high()
+        luxMain(lux1, lux2)
+        led.low()
         
         for x in range(rest/0.005):
             #check manual mode flag every 5 ms
