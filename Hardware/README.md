@@ -35,13 +35,26 @@ The system works as follow :
 
 Below are renders of all the parts used in the project. These were modelled in Fusion 360 by Majid Al-Muhaideb.
 
-![SOL Aluminum Structure](./images/Faceplate.png)
-![SOL Aluminum Structure](./images/BottomPlate.png)
-![SOL Aluminum Structure](./images/Endstop.png)
-![SOL Aluminum Structure](./images/MotorMount.png)
-![SOL Aluminum Structure](./images/RodFastener.png)
+![Faceplate Render](./images/Faceplate.png)
+Faceplate Render. Snaps onto ballscrew.
+![Bottom Faceplate](./images/BottomPlate.png)
+Bottom Faceplate. bolted to the reflectors.
+![Endstop mount](./images/Endstop.png)
+Endstop mount. Used to secure end-stops to end of the range.
+![Motor mount](./images/MotorMount.png)
+Motor mount. Used to secure motor to the structure.
+![Rod fastener](./images/RodFastener.png)
+Rod fastener. Secures rod to the structure.
 
-Collection of schematics, vendor information,
-pictures, technical specs, etc. Also includes a
-document highlighting how to setup the project
-and connect to external systems, sensors, etc.
+## Electronics
+![Printed circuit boards](./images/pcb.jpeg)
+
+Above are the electronics used in the project. The image is a little outdated, as we've combined the two boards into one, but the electronics on them are the same, and the change is for convinence only. The electronics are divided into two subsections :
+
+1. Monitoring : Consists of sensors that monitor current, temperature, voltage, and luminecence. The data these sensors collect is managed by a Pi Pico microcontroller.
+
+2. Control : Consists of a motor driver that sends signals to the stepper motors. The driver is controlled by a Pi Pico Microcontroller.
+
+The connections of these electronics can be examined in more detail in the schema folder, which contains the PCB schematic & design.
+
+
