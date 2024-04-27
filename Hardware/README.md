@@ -58,7 +58,7 @@ Above are the electronics used in the project. The image is a little outdated, a
 The connections of these electronics can be examined in more detail in the schema folder, which contains the PCB schematic & design.
 
 The following are some notes that should be regarded towards the PCB : 
-- Netlist Explanations :
+Netlist Explanations :
  - Load + = Load from solar charge controller
  - Load - = Return path from solar charge controller. This is ground.
  - Vin P + = Positive from solar panels
