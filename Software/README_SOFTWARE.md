@@ -13,7 +13,7 @@ The monitoring system is written in MicroPython and is uploaded to the Rpi Pico 
 The web application uses a MERN stack. It takes data from our MongoDB database and displays it in a visually pleasing way on the appication. Users may create an account, log in, add solar arrays, and view trends on their solar array data.
 
 ## Reflector Control System
-![Controls Module Flow Diagram](./images/ControlsFlow.jpeg)
+![Controls Module Flow Diagram](./images/ControlsFlow.jpg)
 
 Above is the module flow diagram for our control system.
 
@@ -33,7 +33,7 @@ This module simply keeps track of the position tracking of the stepper motors, t
 This is an open source module which consists of a class for the BH1750 light sensor. This class is primarily used to initialize our light sensors and read sensor values.
 
 ## Monitoring System
-![Controls Module Flow Diagram](./images/MonitorFlow.jpeg)
+![Controls Module Flow Diagram](./images/MonitorFlow.jpg)
 
 Above is the module flow diagram for our monitoring system.
 
