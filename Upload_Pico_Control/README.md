@@ -1,0 +1,1 @@
+Upload all files in this folder into the Control System Rpi Pico W, and simply attach all parts labeled on the PCB and connect wires.
