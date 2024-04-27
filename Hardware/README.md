@@ -57,4 +57,15 @@ Above are the electronics used in the project. The image is a little outdated, a
 
 The connections of these electronics can be examined in more detail in the schema folder, which contains the PCB schematic & design.
 
+The following are some notes that should be regarded towards the PCB : 
+- Netlist Explanations :
+ -Load + = Load from solar charge controller
+ -Load - = Return path from solar charge controller. This is ground.
+ -Vin P + = Positive from solar panels
+ -Vin P - = Negative from solar panels
+ -3.3V_M = 3.3V from monitoring pico
+ -3.3V_C = 3.3V from control pico
+ 5V = Input from a 12V-5V converter. This is an external component
+ VCC = Vin -  from the INA219. This is 12V, and is idential to Load+.
+
 
