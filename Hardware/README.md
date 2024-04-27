@@ -46,6 +46,22 @@ Motor mount. Used to secure motor to the structure.
 ![Rod fastener](./images/RodFastener.png)
 Rod fastener. Secures rod to the structure.
 
+
+The parts were printed in Black ELEGOO PLA. PETG or ABS is preferable due to their stronger mechanical properties, but both require more tuning to print properly, and are not as easy to setup as PLA. The parts dont experience a lot of mechanical stress, so it should not be an issue if used for the purposes of demonstration.
+
+The print settings are as follows :
+
+*Infill - 20 - 40 %*
+
+*Infill Pattern - Gyroid*
+
+*Print Supports - Auto, Normal*
+
+*Walls - 3 inner walls*
+
+Settings can be adjusted as the user sees fit, especially since each printer is tuned differently.
+
+
 ## Electronics
 ![Printed circuit boards](./images/pcb.jpeg)
 
@@ -58,7 +74,7 @@ Above are the electronics used in the project. The image is a little outdated, a
 The connections of these electronics can be examined in more detail in the schema folder, which contains the PCB schematic & design.
 
 The following are some notes that should be regarded towards the PCB : 
-- Netlist Explanations :
+Netlist Explanations :
  - Load + = Load from solar charge controller
  - Load - = Return path from solar charge controller. This is ground.
  - Vin P + = Positive from solar panels
