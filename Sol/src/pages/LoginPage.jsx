@@ -63,7 +63,6 @@ export default function LoginPage() {
           </nav>
         </header>
   
-        <div className='pagebody'>
         <div className="page_content">
             
             <div className="row">
@@ -100,8 +99,7 @@ export default function LoginPage() {
                   <div className="col"></div>
             </div>
           </div>
-  
-        </div>
+
       </>
     )
 }

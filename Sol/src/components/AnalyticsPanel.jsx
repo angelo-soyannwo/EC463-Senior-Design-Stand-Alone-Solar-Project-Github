@@ -35,6 +35,8 @@ function AnalyticsPanel(props) {
   const [luminanceList, setLuminanceList] = useState(null);
   const [temperatures, setTemperatures] = useState(null)
   const [luminaceTimes, setLuminanceTimes] = useState(null);
+  const [chargeRate, setChargeRate] = useState(null)
+  const [charge_graphs, setCharge_graphs] = useState(null)
   const [loading, setLoading] = useState(null)
   const [loading2, setLoading2] = useState(null)
   const [loading3, setLoading3] = useState(null)
@@ -137,6 +139,18 @@ function AnalyticsPanel(props) {
         setLoading2(false)
       }
     })
+
+    axios.get('http://localhost:8000/getCharge_graph').then(result => {
+      try{
+
+        setChargeRate(result.data[result.data.length-1].charge_rate.map(item => item.$numberDecimal))
+        setCharge_graphs(result.data)
+      }
+      catch(err){
+        console.log(err)
+        Alert.alert('sorry an error occcured whilst trying to get the charge rate graphs')
+      }
+    })
     
 
   }, [])
@@ -146,12 +160,11 @@ function AnalyticsPanel(props) {
     setTimes(x.times.map(item => item.slice(11, 22)));
   }
 
-  function findDay(array, date, luminanceArray){
+  function findDay(array, date, luminanceArray, chargeRateArray){
 
-    // var formattedDate = date.slice(7,10) + '-' + date.slice(4,5) + '-' + date.slice(0,1)
+    var formattedDate = date.slice(7,10) + '-' + date.slice(4,5) + '-' + date.slice(0,1)
     console.log(date)
     var flag = false
-    var fla
     for(var i=0; i<array.length; i++){
       if (array[i].date.slice(0, 10) === date){
 
@@ -176,6 +189,13 @@ function AnalyticsPanel(props) {
     //     setTimes(array[i].times.map(item => item.slice(11, 22)));
     }
     }
+
+    for(var i=0; i<chargeRateArray.length; i++){
+      console.log(chargeRateArray[i].date)
+      if (chargeRateArray[i].date.slice(0, 10) === date){
+        setChargeRate(chargeRateArray[i].charge_rate.map(item => item.$numberDecimal)); 
+      }
+    }
     
   }
 
@@ -189,9 +209,9 @@ function AnalyticsPanel(props) {
       
       return(
         <MDBTableBody key={index}>
-          <tr onClick={() => {setDisplayData(item); setSelectedDay(item.date.slice(0, 10)), findDay(days, item.date.slice(0, 10), luminanceList)}}>
+          <tr onClick={() => {setDisplayData(item); setSelectedDay(item.date.slice(0, 10)), findDay(days, item.date.slice(0, 10).replaceAll('-', '/'), luminanceList, charge_graphs)}}>
             <th scope="row">{start+index+1}</th>
-            <td className='tableRow'>
+            <td className='tableRow' >
               {/* {item} */}
               {item.date.slice(0, 10)}
             </td>
@@ -206,7 +226,7 @@ function AnalyticsPanel(props) {
   function handleSearch(){
     console.log(searchQuery)
     console.log(luminanceList)
-    findDay(days, searchQuery, luminanceList)
+    findDay(days, searchQuery, luminanceList, charge_graphs)
     // props.setEmailAddress(props.email)
   }
 
@@ -223,10 +243,9 @@ function AnalyticsPanel(props) {
       {/*!-- library  --*/}
 
 
-      <div className='pagebody'>
         <div className="page_content">
           
-          <div className="row">
+          <div className="row" style={{display: 'flex', flexWrap: 'wrap'}}>
             <div className="col"></div>
 
                 <div className="col-5"> 
@@ -239,7 +258,7 @@ function AnalyticsPanel(props) {
                     </div>
                   { loading ? null : 
 
-                  <div style={{marginTop: "20px"}}>
+                  <div  style={{marginTop: "20px"}}>
 
                   {selectedDay ? <h5>{selectedDay}</h5> : null}
                   
@@ -258,14 +277,20 @@ function AnalyticsPanel(props) {
                                       {
                                         label: 'solar irradiation',
                                         data: luminances,
-                                        backgroundColor: "yellow",
-                                        borderColor: "yellow",
+                                        backgroundColor: "black",
+                                        borderColor: "black",
                                       },
                                       {
                                         label: 'temperature farenheit',
                                         data: temperatures,
                                         backgroundColor: "red",
                                         borderColor: "red",
+                                      },
+                                      {
+                                        label: 'Charge Rate',
+                                        data: chargeRate,
+                                        backgroundColor: "grey",
+                                        borderColor: "grey",
                                       },
                                     ]
                                   }}
@@ -360,17 +385,6 @@ function AnalyticsPanel(props) {
                         display: 'flex'
                       }}
                       >
-
-                      
-
-                        {days.length > end ? 
-                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start+5); setEnd(end+5); setPage(page+1)}}>next</button> 
-                          
-                          : 
-                          
-                          null
-                          
-                        }
                         
                         {start > 0 ? 
 
@@ -379,6 +393,15 @@ function AnalyticsPanel(props) {
                           : 
 
                           null
+                        }
+
+                        {days.length > end ? 
+                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start+5); setEnd(end+5); setPage(page+1)}}>next</button> 
+                          
+                          : 
+                          
+                          null
+                          
                         }
                         
 
@@ -413,25 +436,10 @@ function AnalyticsPanel(props) {
                 </div>
           </div>
 
-          <div className="row">
-            <div className="col"></div>
-
-            {/* <SolarArrayCard title = {'Solar Array '}/> */}
-            {/* <ChartComponent/> */}
-
-            
-
-           
-
-
-
-            <div className="col"></div>
-
-          </div>
+          
 
         </div>
 
-      </div>
 
       
     </>

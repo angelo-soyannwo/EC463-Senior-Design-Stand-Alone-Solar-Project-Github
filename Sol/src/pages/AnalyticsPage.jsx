@@ -88,7 +88,7 @@ export default function AnalyticsPage() {
         { user !== null && user.solarArrays.length > 0 ?
          <AnalyticsPanel title={welcomeMessage} setEmailAddress={setEmail} email={email}/>
           :
-          <div className='pagebody'>
+          
           <div className="page_content">
             
             <div className="row">
@@ -128,7 +128,7 @@ export default function AnalyticsPage() {
 
           </div>
 
-        </div>
+        
         }
       </>
     );

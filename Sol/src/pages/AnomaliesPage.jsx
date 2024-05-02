@@ -84,7 +84,6 @@ export default function AnomaliesPage() {
         { user !== null && user.solarArrays.length > 0 ?
           <AnomaliesPanel title = {welcomeMessage}/>
         :
-        <div className='pagebody'>
           <div className="page_content">
             
             <div className="row">
@@ -104,27 +103,11 @@ export default function AnomaliesPage() {
                   <div className="col"></div>
             </div>
 
-            <div className="row">
-              <div className="col"></div>
-
-
-              <div className="col">
-
-                </div>
-
-              {/* <SolarArrayCard title = {'Solar Array '}/> */}
-
-              <div className="col">
-                <div className="text-center">
-              
-                </div>
-              </div>
-
-            </div>
+            
 
           </div>
 
-        </div>
+
     
         }
   </>

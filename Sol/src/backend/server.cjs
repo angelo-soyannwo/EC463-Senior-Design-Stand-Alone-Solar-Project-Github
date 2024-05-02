@@ -10,6 +10,7 @@ const Luminance = require('./models/Luminance.cjs');
 const Temperature = require('./models/Temperature.cjs');
 const Graph = require('./models/Graph.cjs');
 const Anomalie = require('./models/Anomaly.cjs');
+const Charge_graph = require('./models/Charge_graph.cjs');
 var bodyParser = require('body-parser');
 require('dotenv').config({path:'./.env'})
 const { MongoClient } = require("mongodb");
@@ -343,6 +344,19 @@ app.get('/getAnomalies',  async(req, res) => {
         }
     })
 })
+
+app.get('/getCharge_graph',  async(req, res) => {
+    await Charge_graph.find({}).then((result) => {
+        if(result) {
+            // console.log(result)
+            res.json(result)
+        }
+        else{
+            res.json('failed to retrieve Charge_graph data')
+        }
+    })
+})
+
 
 
 // app.listen(8000, ()=>{

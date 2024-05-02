@@ -118,37 +118,25 @@ if (!solarArrays){
 else{
     return (
       <>
-        <div className='pagebody'>
+
           <div className="page_content">
             
-            <div className="row">
-              <div className="col"></div>
-
-                  <div className="col-5"> 
-                    {/* <div className="card"> */}
-                      <div className="card-body">
-                        <h5 className="card-title">
-                        <div className="text-center">{props.title}</div>
-                        </h5>
-
-                      </div>
-                    {/* </div> */}
-                  </div>
-
-                  <div className="col"></div>
-            </div>
+            
 
             <div className="row">
               <div className="col"></div>
 
 
               <div className="col">
+              <h5 className="card-title">
+                  <div className="text-center" style={{marginBottom: '20px'}}>{props.title}</div>
+              </h5>
                 {arrayList(solarArrays.data)}
                 </div>
 
               {/* <SolarArrayCard title = {'Solar Array '}/> */}
 
-              <div className="col">
+              <div className="col" style={{display: 'flex', justifyContent: 'center'}}>
                 <div className="text-center">
                 {/* the line below has a button which allows for the creation of a solar array in our database*/}
                   <ModalForm email = {email}/>
@@ -163,7 +151,7 @@ else{
 
           </div>
 
-        </div>
+
       </>
     );
   }

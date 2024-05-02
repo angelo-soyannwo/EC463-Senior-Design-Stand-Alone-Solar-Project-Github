@@ -15,7 +15,7 @@ header{
   justify-content: space-between;
   padding-top: 100px 9%;
   background: transparent;
-  
+  margin-bottom: 100px;
 }
 
 
@@ -84,7 +84,72 @@ div .btn:hover{
   margin: 0 auto;
   /* width: 1140px; */
   justify-content: space-between;
+
+  
+}
+
+.page_content{
+
+  display: flex;
+  margin: 0 auto;
+  /* width: 1140px; */
+  justify-content: space-between;
+
+  padding-top: 100px;
+  padding-bottom: 100px;
+  height: 100vh;
+  width: 100vw;
+  /* margin-bottom: 50vh; */
 }
 
 
+@media (max-width:700px){
+  .page_content .row {
+    /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    /* flex-flow: column 'reverse-wrap'; */
+    /* flex-wrap: wrap; */
+    /* flex-flow: column; */
+    /* margin-left: 5px; */
+    /* margin-right: 5px; */
+    /* font-size: 15px; */ 
+  }
+
+  div .canvas{
+    height: 400px;
+  }
+
+  .col-5 {
+    width: 100%;
+  }
+
+  header{
+    padding-bottom: 20px;
+  }
+
+  #canvas-container {
+    height: auto;
+    width: auto;
+ }
+
+  
+
+  .page_content{
+
+    display: flex;
+  margin: 0 auto;
+  /* width: 1140px; */
+  justify-content: space-between;
+
+    padding-top: 100px;
+    padding-bottom: 100px;
+    height: 100vh;
+    width: 100vw;
+    /* margin-bottom: 50vh; */
+  }
+  
+
+}
 

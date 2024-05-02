@@ -96,7 +96,6 @@ function AnomaliesPanel(props) {
 
   return (
     <>
-      <div className='pagebody'>
         <div className="page_content">
           
           <div className="row">
@@ -162,6 +161,16 @@ function AnomaliesPanel(props) {
                       }}
                       >
 
+                        {start > 0 ? 
+
+                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start-5); setEnd(end-5); setPage(page-1)}}>back</button> 
+                          
+                          : 
+
+                          null
+                        }
+
+
                         {anomalies.length > end ? 
                           <button className="btn" state={{id:props.email}} onClick={() => {setStart(start+5); setEnd(end+5); setPage(page+1)}}>next</button> 
                           
@@ -171,14 +180,6 @@ function AnomaliesPanel(props) {
                           
                         }
                         
-                        {start > 0 ? 
-
-                          <button className="btn" state={{id:props.email}} onClick={() => {setStart(start-5); setEnd(end-5); setPage(page-1)}}>back</button> 
-                          
-                          : 
-
-                          null
-                        }
                         
 
                       </div>
@@ -204,7 +205,6 @@ function AnomaliesPanel(props) {
 
         </div>
 
-      </div>
     </>
   );
 }
