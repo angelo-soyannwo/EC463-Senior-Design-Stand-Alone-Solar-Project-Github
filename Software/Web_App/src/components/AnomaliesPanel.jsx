@@ -29,13 +29,13 @@ function AnomaliesPanel(props) {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(5);
   const [page, setPage] = useState(1);
-
+  const baseUrl = "http://localhost:8000/";
 
   useEffect(() => {
 
     setLoading(true)
 
-    axios.get('http://localhost:8000/getAnomalies').then(result => {
+    axios.get(baseUrl.concat('getAnomalies')).then(result => {
       console.log(result.data)
       try{
         setAnomalies(result.data)

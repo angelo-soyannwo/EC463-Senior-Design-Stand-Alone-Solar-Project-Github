@@ -18,13 +18,15 @@ export default function HomePage() {
   const [email, setEmail] = useState(location.state.id)
   const [solarArrayList, setSolarArrayList] = useState(null)
   const [userSolarArrayObjects, setUserSolarArrayObjects] = useState(null)
+
+  const baseUrl = "http://localhost:8000/";
     
   useEffect(() => {
-    axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
+    axios.post(baseUrl.concat('getUser'), {email: email}).then( profile => {
       setUser(profile)
       if (profile) {
         setSolarArrayList(profile.data.solarArrays);
-          axios.post('http://localhost:8000/getSolarArrays', {array: profile.data.solarArrays}).then( response => {
+          axios.post(baseUrl.concat('getSolarArrays'), {array: profile.data.solarArrays}).then( response => {
             setUserSolarArrayObjects(response);
             // console.log(response)
           }).catch(err => {

@@ -19,11 +19,13 @@ function App() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
+    const baseUrl = "http://localhost:8000/";
+
     async function submit(e) {
         e.preventDefault();
 
         try{
-            await axios.post("http://localhost:8000/login", {email, password}).then(res=>{
+            await axios.post(baseUrl.concat("login"), {email, password}).then(res=>{
               if (res.data==="Success"){
                 history("/home", {state:{id:email}})
               } 

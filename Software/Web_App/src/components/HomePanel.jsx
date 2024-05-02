@@ -19,16 +19,17 @@ function HomePanel(props) {
   const [user, setUser] = useState(null)
   const [solarArrays, setSolarArrayObjects] = useState({})
   // const [refresh, setRefresh] = useState(false)
+  const baseUrl = "http://localhost:8000/";
   
 
   useEffect(() => {
-    axios.post('http://localhost:8000/getUser', {email: email}).then( profile => {
+    axios.post(baseUrl.concat('getUser'), {email: email}).then( profile => {
       setUser(profile)
       if (profile) {
         localStorage.setItem("currentUser", JSON.stringify(profile.data));
         console.log(profile.data)
         // setSolarArrayList(profile.data.solarArrays);
-          axios.post('http://localhost:8000/getSolarArrays', {array: profile.data.solarArrays}).then( response => {
+          axios.post(baseUrl.concat('getSolarArrays'), {array: profile.data.solarArrays}).then( response => {
             setSolarArrayObjects(response);
             // console.log(response)
           }).catch(err => {

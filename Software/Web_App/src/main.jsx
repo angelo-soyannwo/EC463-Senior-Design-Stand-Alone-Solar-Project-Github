@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { createBrowserRouter, RouterProvider,} from 'react-router-dom'
+import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 import './index.css'
 /* existing imports */
 // import Root from "./routes/root";
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
 ]);
 
 // const [loggedIn, setLoggedIn] = useState(false)
+
+if (process.env.NODE_ENV === 'production') {
+  disableReactDevTools();
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 

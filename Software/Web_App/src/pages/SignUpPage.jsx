@@ -18,11 +18,13 @@ export default function SignUpPage() {
         const [password, setPassword] = useState('')
         const [userName, setUserName] = useState('')
 
+        const baseUrl = "http://localhost:8000/";
+
     async function submit(e) {
         e.preventDefault();
 
         try{
-            await axios.post("http://127.0.0.1:8000/sign-up", {email:email, password:password, userName:userName}).then(res=>{
+            await axios.post(baseUrl.concat("sign-up"), {email:email, password:password, userName:userName}).then(res=>{
               if (res.data=="exist"){
                 alert("You already have an account with us")
                 history("/home",{state:{id:email}})

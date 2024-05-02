@@ -51,6 +51,8 @@ function AnalyticsPanel(props) {
   const [end, setEnd] = useState(5);
   const [page, setPage] = useState(1);
 
+  const baseUrl = "http://localhost:8000/";
+
   const sdk = new ChartsEmbedSDK({
     baseUrl: "https://charts.mongodb.com/charts-embedding-examples-wgffp", // ~REPLACE~ with the Base URL from your Embed Chart dialog.
   });
@@ -84,7 +86,7 @@ function AnalyticsPanel(props) {
     //   }
       
     // })
-    axios.get('http://localhost:8000/luminanceTempGraphData').then(result => {
+    axios.get(baseUrl.concat('luminanceTempGraphData')).then(result => {
       console.log(result.data)
       try{
         setLuminanceTimes(result.data[result.data.length-1].times.map(item => item.slice(11, 22)))
@@ -103,7 +105,7 @@ function AnalyticsPanel(props) {
 
     })
 
-    axios.get('http://localhost:8000/getDays').then(result => {
+    axios.get(baseUrl.concat('getDays')).then(result => {
       try{
 
         var x = result.data.reverse()
@@ -123,7 +125,7 @@ function AnalyticsPanel(props) {
       }
     })
 
-    axios.get('http://localhost:8000/get_luminance_and_temp').then(result => {
+    axios.get(baseUrl.concat('get_luminance_and_temp')).then(result => {
       try{
 
         setLux(result.data.luminance.luminance.$numberDecimal)
@@ -140,7 +142,7 @@ function AnalyticsPanel(props) {
       }
     })
 
-    axios.get('http://localhost:8000/getCharge_graph').then(result => {
+    axios.get(baseUrl.concat('getCharge_graph')).then(result => {
       try{
 
         setChargeRate(result.data[result.data.length-1].charge_rate.map(item => item.$numberDecimal))

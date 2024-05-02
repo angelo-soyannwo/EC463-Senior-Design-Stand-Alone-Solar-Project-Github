@@ -16,14 +16,15 @@ export default function LoginPage() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const baseUrl = "http://localhost:8000/"
 
     async function submit(e) {
         e.preventDefault();
 
         try{
-            await axios.post("http://localhost:8000/login", {email, password}).then(async(res)=>{
+            await axios.post(baseUrl.concat("login"), {email, password}).then(async(res)=>{
               if (res.data==="Success"){
-                await axios.post("http://localhost:8000/getUser", {email}).then(async(user)=>{
+                await axios.post(baseUrl.concat("getUser"), {email}).then(async(user)=>{
                   window.localStorage.setItem("currentUser", JSON.stringify(user));
                 }
                 );

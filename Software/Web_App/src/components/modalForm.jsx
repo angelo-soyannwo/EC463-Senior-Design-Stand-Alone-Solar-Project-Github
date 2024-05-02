@@ -21,12 +21,13 @@ function ModalForm(props) {
     const handleShow = () => setShow(true);
     const [id, setId] = useState('')
     // const [refresh, setRefresh] = useState(false)
+    const baseUrl = "http://localhost:8000/";
 
   async function addSolarArray(e) {
     e.preventDefault();
 
     try{
-        await axios.post("http://localhost:8000/addSolarArray", {email:email, arrayId:id}).then(res=>{
+        await axios.post(baseUrl.concat("addSolarArray"), {email:email, arrayId:id}).then(res=>{
           if(res.data === "notExist") {
             alert("Check array details")
           }

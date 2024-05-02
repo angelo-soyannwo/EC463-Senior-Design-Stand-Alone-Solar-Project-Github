@@ -18,6 +18,7 @@ function ModalFormCSAI(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [arrayLocation, setArrayLocation] = useState('')
+    const baseUrl = "http://localhost:8000/";
 
   async function createSolarArrayInstance(e) {
     e.preventDefault();
@@ -28,7 +29,7 @@ function ModalFormCSAI(props) {
   }
 
     try{
-        await axios.post("http://localhost:8000/createSolarArrayInstance", Data).then(res=>{
+        await axios.post(baseUrl.concat("createSolarArrayInstance"), Data).then(res=>{
           if(res.data === "notExist") {
             alert("Created Solar Array")
           }
