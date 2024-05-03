@@ -364,7 +364,7 @@ app.get('/getCharge_graph',  async(req, res) => {
 // })
 
 mongoose.connect(databaseEntryPoint).then(()=>{
-    app.listen(10000, ()=>{
+    app.listen(10000, '0.0.0.0', ()=>{
         console.log("port connected")
         // console.log(process.env.MONGO_URI)
     })
