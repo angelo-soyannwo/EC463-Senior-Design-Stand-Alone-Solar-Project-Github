@@ -18,7 +18,7 @@ export default function SignUpPage() {
         const [password, setPassword] = useState('')
         const [userName, setUserName] = useState('')
 
-        const baseUrl = "http://localhost:8000/";
+        const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
 
     async function submit(e) {
         e.preventDefault();

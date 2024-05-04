@@ -18,7 +18,7 @@ function ModalFormCSAI(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [arrayLocation, setArrayLocation] = useState('')
-    const baseUrl = "http://localhost:8000/";
+    const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
 
   async function createSolarArrayInstance(e) {
     e.preventDefault();

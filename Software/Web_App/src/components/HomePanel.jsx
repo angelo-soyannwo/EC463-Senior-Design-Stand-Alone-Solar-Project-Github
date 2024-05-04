@@ -19,8 +19,8 @@ function HomePanel(props) {
   const [user, setUser] = useState(null)
   const [solarArrays, setSolarArrayObjects] = useState({})
   // const [refresh, setRefresh] = useState(false)
-  const baseUrl = "http://localhost:8000/";
-  
+  const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
+  const [refresh, setRefresh] = useState(null)
 
   useEffect(() => {
     axios.post(baseUrl.concat('getUser'), {email: email}).then( profile => {
@@ -140,7 +140,7 @@ else{
               <div className="col" style={{display: 'flex', justifyContent: 'center'}}>
                 <div className="text-center">
                 {/* the line below has a button which allows for the creation of a solar array in our database*/}
-                  <ModalForm email = {email}/>
+                  <ModalForm email = {email} refresh = {refresh} setRefresh = {setRefresh}/>
 
 
                   {/* the line below has a button which allows for the creation of a solar array in our database*/}

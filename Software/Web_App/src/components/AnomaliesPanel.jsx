@@ -29,17 +29,15 @@ function AnomaliesPanel(props) {
   const [start, setStart] = useState(0);
   const [end, setEnd] = useState(5);
   const [page, setPage] = useState(1);
-  const baseUrl = "http://localhost:8000/";
+  const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
 
   useEffect(() => {
 
     setLoading(true)
 
     axios.get(baseUrl.concat('getAnomalies')).then(result => {
-      console.log(result.data)
       try{
         setAnomalies(result.data)
-        // console.log(result)
       }
       catch(err){
         console.log(err)

@@ -21,7 +21,7 @@ function ModalForm(props) {
     const handleShow = () => setShow(true);
     const [id, setId] = useState('')
     // const [refresh, setRefresh] = useState(false)
-    const baseUrl = "http://localhost:8000/";
+    const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
 
   async function addSolarArray(e) {
     e.preventDefault();
@@ -32,8 +32,8 @@ function ModalForm(props) {
             alert("Check array details")
           }
           else if(res.data==="exists"){
-            window.location.reload();
             alert('Solar Array Added')
+            window.location.reload();
           }
           else if (res.data==="solarArrayAlreadySelected"){
             alert('You already have access to this solar array')

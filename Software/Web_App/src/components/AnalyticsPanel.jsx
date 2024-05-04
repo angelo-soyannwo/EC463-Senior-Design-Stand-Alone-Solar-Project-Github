@@ -51,7 +51,7 @@ function AnalyticsPanel(props) {
   const [end, setEnd] = useState(5);
   const [page, setPage] = useState(1);
 
-  const baseUrl = "http://localhost:8000/";
+  const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
 
   const sdk = new ChartsEmbedSDK({
     baseUrl: "https://charts.mongodb.com/charts-embedding-examples-wgffp", // ~REPLACE~ with the Base URL from your Embed Chart dialog.

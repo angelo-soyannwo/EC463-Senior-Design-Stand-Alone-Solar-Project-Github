@@ -19,7 +19,7 @@ export default function HomePage() {
   const [solarArrayList, setSolarArrayList] = useState(null)
   const [userSolarArrayObjects, setUserSolarArrayObjects] = useState(null)
 
-  const baseUrl = "http://localhost:8000/";
+  const baseUrl = "https://ec463-senior-design-stand-alone-solar.onrender.com/";
     
   useEffect(() => {
     axios.post(baseUrl.concat('getUser'), {email: email}).then( profile => {

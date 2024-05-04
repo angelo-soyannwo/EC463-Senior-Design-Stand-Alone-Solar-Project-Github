@@ -21,3 +21,5 @@ The monitoring software keeps track of charge and discharge current and voltage,
 ### Web Application
 
 The web application uses a MERN stack (MongoDB, Express.js, React, Node.js). The web app takes data from our database on MongoDB, which in turn has data uploaded from our Pico servers. The user interface of the web app allows users to create an account, create arrays of our solar modules, and monitor solar panel output power, solar irradiation, and temperature across time. If any anomaly is detected, the user will receive an email such that they can check up on the system as soon as they can.
+
+Link to Web Application: https://sol-ec-464-team-15.netlify.app/
